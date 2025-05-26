@@ -2,35 +2,223 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 /**
- * FITTS'S LAW OPTIMIZATIONS APPLIED:
+ * USER GUIDANCE & FEEDBACK OPTIMIZATION PRINCIPLES APPLIED:
  * 
- * 1. Target Size Optimization:
- *    - Step navigator buttons: Enhanced from 48px to 64px+ (minimum 44px touch target)
- *    - Category/Difficulty cards: Minimum 120px height with larger padding
- *    - Navigation buttons: Minimum 44px height, larger widths for primary actions
- *    - Form inputs: Enhanced padding for easier targeting
+ * 1. Clear Next Actions & CTAs:
+ *    - Obvious next steps after every action with visual guidance
+ *    - Prominent call-to-action buttons with clear labels
+ *    - Avoid homepage redirects; guide to relevant next actions
+ *    - Limited options to reduce decision fatigue
  * 
- * 2. Distance/Proximity Optimization:
- *    - Related controls grouped together with adequate spacing
- *    - Sequential action buttons positioned close to each other
- *    - Step navigator centrally positioned for easy access
- *    - Submit button largest and most prominent for final action
+ * 2. Immediate Feedback System:
+ *    - Instant visual feedback for all user actions (<100ms)
+ *    - Toast notifications for success/error states
+ *    - Real-time progress indicators and completion status
+ *    - Clear status messages without distractions
  * 
- * 3. Mobile-Specific Optimizations:
- *    - All touch targets minimum 44px, enhanced to 56px+ for better usability
- *    - Increased spacing between interactive elements
- *    - Larger icons and text for better visibility and targeting
+ * 3. Flow & Engagement:
+ *    - Single-task focus with progressive disclosure
+ *    - Balanced challenge-to-skill ratio with helpful prompts
+ *    - Gamification elements (progress, achievements, streaks)
+ *    - Scaled complexity based on user experience
  * 
- * 4. Visual Clarity Enhancement:
- *    - Clear visual boundaries for clickable areas
- *    - Hover effects to indicate interactive elements
- *    - Progressive sizing (larger buttons for more important actions)
- *    - Enhanced shadows and borders for better depth perception
- * 
- * Combined with previous optimizations:
+ * Combined with existing optimizations:
  * - Cognitive Load Theory: Progressive disclosure, chunking, familiar patterns
  * - Doherty Threshold: <400ms response times, instant feedback, optimized performance
+ * - Fitts's Law: Optimized target sizes, proximity, and visual hierarchy
  */
+
+// Toast Notification Component for Immediate Feedback
+const ToastNotification = ({ message, type, onClose, autoClose = true }) => {
+  useEffect(() => {
+    if (autoClose) {
+      const timer = setTimeout(onClose, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [onClose, autoClose]);
+
+  const getToastStyle = () => {
+    switch (type) {
+      case 'success':
+        return 'bg-gradient-to-r from-green-500 to-emerald-500 text-white';
+      case 'error':
+        return 'bg-gradient-to-r from-red-500 to-rose-500 text-white';
+      case 'warning':
+        return 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white';
+      case 'info':
+        return 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white';
+      default:
+        return 'bg-gray-800 text-white';
+    }
+  };
+
+  const getIcon = () => {
+    switch (type) {
+      case 'success': return '✅';
+      case 'error': return '❌';
+      case 'warning': return '⚠️';
+      case 'info': return 'ℹ️';
+      default: return '💡';
+    }
+  };
+
+  return (
+    <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-md transition-all duration-300 transform ${getToastStyle()}`}>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          <span className="text-xl mr-3">{getIcon()}</span>
+          <span className="font-medium">{message}</span>
+        </div>
+        <button 
+          onClick={onClose}
+          className="ml-4 text-white/80 hover:text-white text-xl leading-none"
+        >
+          ×
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// Progress Achievement Component for Gamification
+const ProgressAchievement = ({ step, totalSteps, completedSteps }) => {
+  const progressPercentage = (completedSteps.size / totalSteps) * 100;
+  
+  const getAchievementLevel = () => {
+    if (progressPercentage === 100) return { level: 'Master', emoji: '🏆', color: 'from-yellow-400 to-orange-400' };
+    if (progressPercentage >= 75) return { level: 'Expert', emoji: '⭐', color: 'from-purple-400 to-pink-400' };
+    if (progressPercentage >= 50) return { level: 'Intermediate', emoji: '🚀', color: 'from-blue-400 to-indigo-400' };
+    if (progressPercentage >= 25) return { level: 'Beginner', emoji: '🌱', color: 'from-green-400 to-emerald-400' };
+    return { level: 'Starting', emoji: '✨', color: 'from-gray-400 to-gray-500' };
+  };
+
+  const achievement = getAchievementLevel();
+
+  return (
+    <div className="bg-white/90 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-white/20 mb-6">
+      <div className="flex items-center justify-between mb-3">
+        <div className="flex items-center">
+          <span className="text-2xl mr-3">{achievement.emoji}</span>
+          <div>
+            <div className="font-bold text-gray-800">{achievement.level} Creator</div>
+            <div className="text-sm text-gray-600">{Math.round(progressPercentage)}% Complete</div>
+          </div>
+        </div>
+        <div className="text-right">
+          <div className="text-sm font-medium text-gray-600">Step {step} of {totalSteps}</div>
+        </div>
+      </div>
+      <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+        <div 
+          className={`h-full bg-gradient-to-r ${achievement.color} transition-all duration-500 ease-out`}
+          style={{ width: `${progressPercentage}%` }}
+        />
+      </div>
+    </div>
+  );
+};
+
+// Next Action Guidance Component
+const NextActionGuide = ({ currentStep, formData, onAction }) => {
+  const getNextActionGuidance = () => {
+    switch (currentStep) {
+      case 1:
+        return {
+          title: "Let's start with the basics",
+          description: "Give your idea a compelling title and description",
+          action: formData.title && formData.description ? "Continue to Category Selection" : "Fill out the required fields",
+          icon: "📝",
+          canProceed: formData.title && formData.description
+        };
+      case 2:
+        return {
+          title: "Choose your project's focus",
+          description: "Select a category and difficulty level",
+          action: formData.category && formData.difficulty ? "Proceed to Project Details" : "Make your selections",
+          icon: "🎯",
+          canProceed: formData.category && formData.difficulty
+        };
+      case 3:
+        return {
+          title: "Add the finishing touches",
+          description: "Include tags, skills, and time estimates",
+          action: formData.tags ? "Ready for Contact Info" : "Add project details",
+          icon: "🔧",
+          canProceed: formData.tags
+        };
+      case 4:
+        return {
+          title: "Almost there!",
+          description: "Provide your contact information",
+          action: formData.submitterName && formData.submitterEmail ? "Submit Your Idea" : "Complete your info",
+          icon: "📧",
+          canProceed: formData.submitterName && formData.submitterEmail
+        };
+      default:
+        return null;
+    }
+  };
+
+  const guidance = getNextActionGuidance();
+  if (!guidance) return null;
+
+  return (
+    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 mb-6 border border-indigo-200">
+      <div className="flex items-start">
+        <span className="text-3xl mr-4">{guidance.icon}</span>
+        <div className="flex-1">
+          <h3 className="text-lg font-bold text-gray-800 mb-2">{guidance.title}</h3>
+          <p className="text-gray-600 mb-4">{guidance.description}</p>
+          <div className="flex items-center justify-between">
+            <span className={`font-medium ${guidance.canProceed ? 'text-green-600' : 'text-orange-600'}`}>
+              {guidance.action}
+            </span>
+            {guidance.canProceed && (
+              <span className="text-green-500 text-xl">✅</span>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Success Flow Component
+const SuccessFlow = ({ submittedIdea, onNextAction }) => {
+  return (
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl p-8 max-w-md w-full text-center shadow-2xl transform animate-bounce">
+        <div className="text-6xl mb-4">🎉</div>
+        <h2 className="text-2xl font-bold text-gray-800 mb-2">Idea Submitted Successfully!</h2>
+        <p className="text-gray-600 mb-6">
+          Your idea "{submittedIdea?.title}" has been added to our collection. 
+          Other creators are excited to see what you've shared!
+        </p>
+        
+        <div className="space-y-3">
+          <button
+            onClick={() => onNextAction('browse')}
+            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+          >
+            🔍 Explore Other Ideas
+          </button>
+          <button
+            onClick={() => onNextAction('submit')}
+            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-green-700 hover:to-emerald-700 transition-all duration-200 transform hover:scale-105"
+          >
+            ✨ Submit Another Idea
+          </button>
+          <button
+            onClick={() => onNextAction('view')}
+            className="w-full border-2 border-gray-300 text-gray-700 py-3 px-6 rounded-lg font-semibold hover:border-gray-400 hover:bg-gray-50 transition-all duration-200"
+          >
+            👀 View Your Submitted Idea
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const SubmitIdea = ({ isEditMode = false }) => {
   const navigate = useNavigate();
@@ -41,7 +229,18 @@ const SubmitIdea = ({ isEditMode = false }) => {
   const [completedSteps, setCompletedSteps] = useState(new Set());
   const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
   const totalSteps = 4;
-    // Doherty Threshold: Instant feedback states
+  
+  // Enhanced Feedback States
+  const [toastNotification, setToastNotification] = useState(null);
+  const [submittedIdea, setSubmittedIdea] = useState(null);
+  const [showSuccessFlow, setShowSuccessFlow] = useState(false);
+  const [userProgress, setUserProgress] = useState({
+    ideasSubmitted: 0,
+    streak: 0,
+    level: 'Beginner'
+  });
+
+  // Doherty Threshold: Instant feedback states
   const [validationState, setValidationState] = useState({});
   const [isTyping, setIsTyping] = useState(false);
   const [lastInputTime, setLastInputTime] = useState(Date.now());
@@ -438,16 +637,23 @@ const SubmitIdea = ({ isEditMode = false }) => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  // Cognitive Load Reduction: Simplified form submission
+  // Cognitive Load Reduction: Simplified form submission  // Enhanced Submit Handler with Immediate Feedback and Clear Next Actions
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Immediate feedback: Show validation in progress
+    setToastNotification({ message: "Validating your idea...", type: "info" });
     
     // Validate all steps before submission
     let allValid = true;
     for (let step = 1; step <= totalSteps; step++) {
-      if (!validateStep(step)) {
+      if (!validateStep(step, formData)) {
         allValid = false;
         setCurrentStep(step); // Jump to first invalid step
+        setToastNotification({ 
+          message: `Please complete Step ${step} before submitting`, 
+          type: "warning" 
+        });
         break;
       }
     }
@@ -455,40 +661,92 @@ const SubmitIdea = ({ isEditMode = false }) => {
     if (!allValid) return;
     
     setIsSubmitting(true);
+    setToastNotification({ message: "Submitting your idea...", type: "info" });
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setShowSuccess(true);
+      // Simulate API call with realistic timing
+      await new Promise(resolve => setTimeout(resolve, 1500));
       
-      if (isEditMode) {
-        setTimeout(() => {
-          navigate('/my-submissions');
-        }, 2000);
-      } else {
-        setTimeout(() => {
-          // Reset form and go back to step 1
-          setFormData({
-            title: '',
-            description: '',
-            category: '',
-            difficulty: '',
-            tags: '',
-            requiredSkills: '',
-            estimatedTime: '',
-            resources: '',
-            submitterName: '',
-            submitterEmail: '',
-            contactPreference: 'email'
-          });
-          setCurrentStep(1);
-          setCompletedSteps(new Set());
-          setShowSuccess(false);
-        }, 3000);
-      }
+      // Create submitted idea object for success flow
+      const submittedIdeaData = {
+        ...formData,
+        id: Date.now(), // Simple ID generation
+        submittedAt: new Date().toISOString(),
+        views: 0,
+        likes: 0
+      };
+      
+      setSubmittedIdea(submittedIdeaData);
+      
+      // Update user progress (gamification)
+      setUserProgress(prev => ({
+        ...prev,
+        ideasSubmitted: prev.ideasSubmitted + 1,
+        streak: prev.streak + 1,
+        level: prev.ideasSubmitted >= 5 ? 'Expert' : prev.ideasSubmitted >= 2 ? 'Intermediate' : 'Beginner'
+      }));
+      
+      // Clear toast and show success flow
+      setToastNotification(null);
+      setShowSuccessFlow(true);
+      
     } catch (error) {
       console.error('Error submitting idea:', error);
+      setToastNotification({ 
+        message: "Failed to submit idea. Please try again.", 
+        type: "error" 
+      });
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  // Enhanced Next Action Handler for Success Flow
+  const handleSuccessFlowAction = (action) => {
+    setShowSuccessFlow(false);
+    
+    switch (action) {
+      case 'browse':
+        setToastNotification({ 
+          message: "Exploring community ideas...", 
+          type: "success" 
+        });
+        setTimeout(() => navigate('/browse'), 500);
+        break;
+        
+      case 'submit':
+        // Reset form for new submission
+        setFormData({
+          title: '',
+          description: '',
+          category: '',
+          difficulty: '',
+          tags: '',
+          requiredSkills: '',
+          estimatedTime: '',
+          resources: '',
+          submitterName: '',
+          submitterEmail: '',
+          contactPreference: 'email'
+        });
+        setCurrentStep(1);
+        setCompletedSteps(new Set());
+        setToastNotification({ 
+          message: "Ready for your next great idea!", 
+          type: "success" 
+        });
+        break;
+        
+      case 'view':
+        setToastNotification({ 
+          message: "Viewing your submitted idea...", 
+          type: "info" 
+        });
+        setTimeout(() => navigate('/my-submissions'), 500);
+        break;
+        
+      default:
+        navigate('/');
     }
   };
 
@@ -592,6 +850,21 @@ const SubmitIdea = ({ isEditMode = false }) => {
         </div>
       </div>      {/* Form Section - Cognitive Load Theory Implementation */}
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        
+        {/* Progress Achievement Component for Gamification */}
+        <ProgressAchievement 
+          step={currentStep} 
+          totalSteps={totalSteps} 
+          completedSteps={completedSteps} 
+        />
+        
+        {/* Next Action Guidance Component */}
+        <NextActionGuide 
+          currentStep={currentStep} 
+          formData={formData} 
+          onAction={() => {}} 
+        />
+        
         <form onSubmit={handleSubmit} onKeyDown={handleKeyDown} className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/50">
           
           {/* Progress Indicator - Reduces Uncertainty and Cognitive Load */}
@@ -1176,8 +1449,7 @@ const SubmitIdea = ({ isEditMode = false }) => {
                     Submitting...
                   </>
                 ) : (
-                  <>
-                    <span className="mr-2 text-xl">🚀</span>
+                  <>                    <span className="mr-2 text-xl">🚀</span>
                     {isEditMode ? 'Update Idea' : 'Submit Idea'}
                   </>
                 )}
@@ -1186,6 +1458,23 @@ const SubmitIdea = ({ isEditMode = false }) => {
           </div>
         </form>
       </div>
+      
+      {/* Toast Notification for Immediate Feedback */}
+      {toastNotification && (
+        <ToastNotification
+          message={toastNotification.message}
+          type={toastNotification.type}
+          onClose={() => setToastNotification(null)}
+        />
+      )}
+      
+      {/* Success Flow Component for Clear Next Actions */}
+      {showSuccessFlow && submittedIdea && (
+        <SuccessFlow
+          submittedIdea={submittedIdea}
+          onNextAction={handleSuccessFlowAction}
+        />
+      )}
     </div>
   );
 };
