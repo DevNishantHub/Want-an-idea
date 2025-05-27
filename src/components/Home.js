@@ -5,7 +5,7 @@ import HeroSection from './HeroSection';
 const Home = ({ projectIdeas }) => {
   return (
     <>
-      <Header />
+      
       <HeroSection projectIdeas={projectIdeas} />
     </>
   );

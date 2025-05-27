@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-
 /**
  * USER GUIDANCE & FEEDBACK OPTIMIZATION PRINCIPLES APPLIED:
  * 
@@ -36,7 +35,6 @@ const ToastNotification = ({ message, type, onClose, autoClose = true }) => {
       return () => clearTimeout(timer);
     }
   }, [onClose, autoClose]);
-
   const getToastStyle = () => {
     switch (type) {
       case 'success':
@@ -46,12 +44,11 @@ const ToastNotification = ({ message, type, onClose, autoClose = true }) => {
       case 'warning':
         return 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white';
       case 'info':
-        return 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white';
+        return 'bg-gradient-to-r from-orange-500 to-red-500 text-white';
       default:
         return 'bg-gray-800 text-white';
     }
   };
-
   const getIcon = () => {
     switch (type) {
       case 'success': return '✅';
@@ -61,7 +58,6 @@ const ToastNotification = ({ message, type, onClose, autoClose = true }) => {
       default: return '💡';
     }
   };
-
   return (
     <div className={`fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg max-w-md transition-all duration-300 transform ${getToastStyle()}`}>
       <div className="flex items-center justify-between">
@@ -83,11 +79,10 @@ const ToastNotification = ({ message, type, onClose, autoClose = true }) => {
 // Progress Achievement Component for Gamification
 const ProgressAchievement = ({ step, totalSteps, completedSteps }) => {
   const progressPercentage = (completedSteps.size / totalSteps) * 100;
-  
-  const getAchievementLevel = () => {
+    const getAchievementLevel = () => {
     if (progressPercentage === 100) return { level: 'Master', emoji: '🏆', color: 'from-yellow-400 to-orange-400' };
-    if (progressPercentage >= 75) return { level: 'Expert', emoji: '⭐', color: 'from-purple-400 to-pink-400' };
-    if (progressPercentage >= 50) return { level: 'Intermediate', emoji: '🚀', color: 'from-blue-400 to-indigo-400' };
+    if (progressPercentage >= 75) return { level: 'Expert', emoji: '⭐', color: 'from-orange-400 to-red-400' };
+    if (progressPercentage >= 50) return { level: 'Intermediate', emoji: '🚀', color: 'from-yellow-400 to-orange-400' };
     if (progressPercentage >= 25) return { level: 'Beginner', emoji: '🌱', color: 'from-green-400 to-emerald-400' };
     return { level: 'Starting', emoji: '✨', color: 'from-gray-400 to-gray-500' };
   };
@@ -161,9 +156,8 @@ const NextActionGuide = ({ currentStep, formData, onAction }) => {
 
   const guidance = getNextActionGuidance();
   if (!guidance) return null;
-
   return (
-    <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 mb-6 border border-indigo-200">
+    <div className="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-6 mb-6 border border-orange-200">
       <div className="flex items-start">
         <span className="text-3xl mr-4">{guidance.icon}</span>
         <div className="flex-1">
@@ -182,7 +176,6 @@ const NextActionGuide = ({ currentStep, formData, onAction }) => {
     </div>
   );
 };
-
 // Success Flow Component
 const SuccessFlow = ({ submittedIdea, onNextAction }) => {
   return (
@@ -193,12 +186,10 @@ const SuccessFlow = ({ submittedIdea, onNextAction }) => {
         <p className="text-gray-600 mb-6">
           Your idea "{submittedIdea?.title}" has been added to our collection. 
           Other creators are excited to see what you've shared!
-        </p>
-        
-        <div className="space-y-3">
+        </p>        <div className="space-y-3">
           <button
             onClick={() => onNextAction('browse')}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-indigo-700 hover:to-purple-700 transition-all duration-200 transform hover:scale-105"
+            className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-3 px-6 rounded-lg font-semibold hover:from-orange-700 hover:to-red-700 transition-all duration-200 transform hover:scale-105"
           >
             🔍 Explore Other Ideas
           </button>
@@ -749,12 +740,11 @@ const SubmitIdea = ({ isEditMode = false }) => {
         navigate('/');
     }
   };
-
   if (showSuccess) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center relative overflow-hidden">
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-pink-50 flex items-center justify-center relative overflow-hidden">
         {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-100/30 via-purple-100/20 to-pink-100/30"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-100/30 via-yellow-100/20 to-pink-100/30"></div>
         
         <div className="relative z-10 bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-12 max-w-lg w-full mx-4 text-center border border-white/50">
           <div className="w-20 h-20 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
@@ -771,11 +761,10 @@ const SubmitIdea = ({ isEditMode = false }) => {
               ? 'Your project idea has been updated successfully!'
               : 'Your project idea has been submitted successfully. We\'ll review it and get back to you soon!'
             }
-          </p>
-          <div className="space-y-4">
+          </p>          <div className="space-y-4">
             <button
               onClick={() => navigate(isEditMode ? '/my-submissions' : '/browse')}
-              className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 px-6 rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
+              className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white py-4 px-6 rounded-xl hover:from-orange-700 hover:to-red-700 transition-all duration-300 font-semibold shadow-lg hover:shadow-xl transform hover:scale-105"
             >
               {isEditMode ? 'View My Submissions' : 'Browse Other Ideas'}
             </button>
@@ -792,27 +781,25 @@ const SubmitIdea = ({ isEditMode = false }) => {
       </div>
     );
   }
-  
-  if (isEditMode && loading) {
+    if (isEditMode && loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-100/30 via-purple-100/20 to-pink-100/30"></div>
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-pink-50 flex items-center justify-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-100/30 via-yellow-100/20 to-pink-100/30"></div>
         
         <div className="relative z-10 text-center">
-          <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-6"></div>
+          <div className="w-16 h-16 border-4 border-orange-200 border-t-orange-600 rounded-full animate-spin mx-auto mb-6"></div>
           <p className="text-xl text-gray-700 font-medium">Loading submission data...</p>
         </div>
       </div>
     );
   }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-white to-pink-50 relative overflow-hidden">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-100/30 via-purple-100/20 to-pink-100/30"></div>
+      <div className="absolute inset-0 bg-gradient-to-br from-orange-100/30 via-yellow-100/20 to-pink-100/30"></div>
       <div className="absolute inset-0" style={{
-        backgroundImage: `radial-gradient(circle at 25% 25%, rgba(99, 102, 241, 0.1) 0%, transparent 50%), 
-                         radial-gradient(circle at 75% 75%, rgba(168, 85, 247, 0.1) 0%, transparent 50%)`
+        backgroundImage: `radial-gradient(circle at 25% 25%, rgba(251, 146, 60, 0.1) 0%, transparent 50%), 
+                         radial-gradient(circle at 75% 75%, rgba(236, 72, 153, 0.1) 0%, transparent 50%)`
       }}></div>
         {/* Enhanced Page Header with Cognitive Bias Principles */}
       <div className="relative z-10 bg-white/80 backdrop-blur-xl shadow-xl border-b border-white/50">
@@ -826,8 +813,7 @@ const SubmitIdea = ({ isEditMode = false }) => {
             
             <div className="text-5xl mb-6 animate-bounce">
               {isEditMode ? '✏️' : '💡'}
-            </div>
-            <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 mb-6 leading-tight">
+            </div>            <h1 className="text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 mb-6 leading-tight">
               {isEditMode ? 'Perfect Your Idea' : 'Your Next Big Idea Starts Here'}
             </h1>
             
@@ -835,7 +821,7 @@ const SubmitIdea = ({ isEditMode = false }) => {
             <p className="text-xl text-gray-700 max-w-3xl mx-auto leading-relaxed font-medium mb-4">
               {isEditMode
                 ? 'Refine your project idea to maximize its impact and visibility.'
-                : <><span className="font-semibold text-indigo-600">87% of funded projects</span> started with a simple idea submission. Don't let your breakthrough innovation slip away!</>
+                : <><span className="font-semibold text-orange-600">87% of funded projects</span> started with a simple idea submission. Don't let your breakthrough innovation slip away!</>
               }
             </p>
             
@@ -873,28 +859,26 @@ const SubmitIdea = ({ isEditMode = false }) => {
               <h3 className="text-lg font-semibold text-gray-700">Step {currentStep} of {totalSteps}</h3>
               <div className="text-sm text-gray-500">{Math.round(getProgress())}% Complete</div>
             </div>
-            
-            {/* Visual Progress Bar */}
+              {/* Visual Progress Bar */}
             <div className="w-full bg-gray-200 rounded-full h-3 mb-6">
               <div 
-                className="bg-gradient-to-r from-indigo-500 to-purple-500 h-3 rounded-full transition-all duration-500 ease-out"
+                className="bg-gradient-to-r from-orange-500 to-red-500 h-3 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${getProgress()}%` }}
               ></div>
-            </div>            {/* Step Navigator - Fitts's Law: Larger targets, better spacing */}
+            </div>{/* Step Navigator - Fitts's Law: Larger targets, better spacing */}
             <div className="flex items-center justify-center space-x-6 sm:space-x-8">
               {[1, 2, 3, 4].map((step) => (
                 <button
                   key={step}
                   type="button"
                   onClick={() => goToStep(step)}
-                  disabled={!completedSteps.has(step) && step !== currentStep && step !== currentStep + 1}
-                  className={`flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full border-3 font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 ${
+                  disabled={!completedSteps.has(step) && step !== currentStep && step !== currentStep + 1}                  className={`flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full border-3 font-bold text-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-110 ${
                     completedSteps.has(step)
                       ? 'bg-green-500 border-green-500 text-white cursor-pointer hover:bg-green-600'
                       : step === currentStep
-                      ? 'bg-indigo-500 border-indigo-500 text-white animate-pulse'
+                      ? 'bg-orange-500 border-orange-500 text-white animate-pulse'
                       : step === currentStep + 1
-                      ? 'border-indigo-300 text-indigo-400 cursor-pointer hover:border-indigo-400 hover:bg-indigo-50'
+                      ? 'border-orange-300 text-orange-400 cursor-pointer hover:border-orange-400 hover:bg-orange-50'
                       : 'border-gray-300 text-gray-400 cursor-not-allowed'
                   }`}
                   style={{ minWidth: '64px', minHeight: '64px' }} // Fitts's Law: Minimum 44px touch target, enhanced to 64px
@@ -902,13 +886,12 @@ const SubmitIdea = ({ isEditMode = false }) => {
                   {completedSteps.has(step) ? '✓' : step}
                 </button>
               ))}
-            </div>
-              {/* Keyboard Navigation Hint - Doherty Threshold UX Enhancement */}
+            </div>            {/* Keyboard Navigation Hint - Doherty Threshold UX Enhancement */}
             <div className="mt-4 text-center">
-              <div className="inline-flex items-center bg-blue-50 text-blue-700 px-4 py-2 rounded-lg text-sm font-medium border border-blue-200">
+              <div className="inline-flex items-center bg-orange-50 text-orange-700 px-4 py-2 rounded-lg text-sm font-medium border border-orange-200">
                 <span className="mr-2">⌨️</span>
-                Press <kbd className="px-2 py-1 mx-1 bg-white border border-blue-300 rounded text-xs font-mono">Enter</kbd> to continue with a brief validation delay, 
-                <kbd className="px-2 py-1 mx-1 bg-white border border-blue-300 rounded text-xs font-mono">Esc</kbd> to go back
+                Press <kbd className="px-2 py-1 mx-1 bg-white border border-orange-300 rounded text-xs font-mono">Enter</kbd> to continue with a brief validation delay, 
+                <kbd className="px-2 py-1 mx-1 bg-white border border-orange-300 rounded text-xs font-mono">Esc</kbd> to go back
               </div>
             </div>
           </div>
@@ -938,17 +921,15 @@ const SubmitIdea = ({ isEditMode = false }) => {
                     name="title"
                     value={formData.title}
                     onChange={handleInputChange}
-                    placeholder="e.g., AI-Powered Recipe Optimizer"
-                    className={`w-full px-6 py-4 border-2 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 text-lg ${
+                    placeholder="e.g., AI-Powered Recipe Optimizer"                    className={`w-full px-6 py-4 border-2 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 text-lg ${
                       errors.title ? 'border-red-300 bg-red-50' : 
                       validationState.title?.isValid ? 'border-green-300 bg-green-50' :
-                      'border-gray-300 hover:border-indigo-300'
+                      'border-gray-300 hover:border-orange-300'
                     }`}
-                  />
-                  {/* Doherty Threshold: Instant visual feedback */}
+                  />                  {/* Doherty Threshold: Instant visual feedback */}
                   {isTyping && (
                     <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-indigo-500"></div>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-orange-500"></div>
                     </div>
                   )}
                 </div>
@@ -1006,11 +987,10 @@ const SubmitIdea = ({ isEditMode = false }) => {
                     value={formData.description}
                     onChange={handleInputChange}
                     rows="6"
-                    placeholder="Example: A mobile app that uses AI to scan your fridge contents and suggests recipes based on what you have, reducing food waste by 40% while saving users $200/month on groceries..."
-                    className={`w-full px-6 py-4 border-2 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-200 text-lg ${
+                    placeholder="Example: A mobile app that uses AI to scan your fridge contents and suggests recipes based on what you have, reducing food waste by 40% while saving users $200/month on groceries..."                    className={`w-full px-6 py-4 border-2 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-200 text-lg ${
                       errors.description ? 'border-red-300 bg-red-50' : 
                       validationState.description?.isValid ? 'border-green-300 bg-green-50' :
-                      'border-gray-300 hover:border-indigo-300'
+                      'border-gray-300 hover:border-orange-300'
                     }`}
                   />
                   {/* Character count indicator */}
@@ -1033,10 +1013,9 @@ const SubmitIdea = ({ isEditMode = false }) => {
                         </p>
                       )}
                     </div>
-                    {formData.description.length >= 50 && !errors.description && (
-                      <span className={`text-sm font-medium transition-all duration-200 ${
+                    {formData.description.length >= 50 && !errors.description && (                      <span className={`text-sm font-medium transition-all duration-200 ${
                         formData.description.length >= 200 ? 'text-green-600' : 
-                        formData.description.length >= 100 ? 'text-yellow-600' : 'text-blue-600'
+                        formData.description.length >= 100 ? 'text-yellow-600' : 'text-orange-600'
                       }`}>
                         {formData.description.length >= 200 ? '🎯 Excellent detail!' : 
                          formData.description.length >= 100 ? '👌 Almost perfect!' : '✍️ Great start!'}
@@ -1045,11 +1024,10 @@ const SubmitIdea = ({ isEditMode = false }) => {
                   </div>
                   {/* Progress bar for description length */}
                   <div className="mt-2 bg-gray-200 rounded-full h-1">
-                    <div 
-                      className={`h-1 rounded-full transition-all duration-300 ${
+                    <div                      className={`h-1 rounded-full transition-all duration-300 ${
                         formData.description.length >= 200 ? 'bg-green-500' : 
                         formData.description.length >= 100 ? 'bg-yellow-500' : 
-                        formData.description.length >= 50 ? 'bg-blue-500' : 'bg-red-500'
+                        formData.description.length >= 50 ? 'bg-orange-500' : 'bg-red-500'
                       }`}
                       style={{ width: `${Math.min((formData.description.length / 300) * 100, 100)}%` }}
                     ></div>
@@ -1066,8 +1044,7 @@ const SubmitIdea = ({ isEditMode = false }) => {
                 <h2 className="text-3xl font-bold text-gray-900 mb-2">Categorize Your Project</h2>
                 <p className="text-gray-600 max-w-2xl mx-auto">
                   Help others discover your idea by choosing the right category and difficulty level.
-                </p>
-                <div className="mt-4 inline-flex items-center bg-purple-100 text-purple-800 px-4 py-2 rounded-full text-sm font-medium">
+                </p>                <div className="mt-4 inline-flex items-center bg-orange-100 text-orange-800 px-4 py-2 rounded-full text-sm font-medium">
                   <span className="mr-2">🔥</span>
                   Technology & Health are trending this week
                 </div>
@@ -1093,11 +1070,10 @@ const SubmitIdea = ({ isEditMode = false }) => {
                           setErrors(prev => ({ ...prev, category: '' }));
                         }
                         console.log('Category selected:', category.name, 'New form data:', newFormData);
-                      }}
-                      className={`relative p-6 min-h-[120px] rounded-xl border-3 transition-all duration-300 text-center hover:scale-105 shadow-md hover:shadow-lg ${
+                      }}                      className={`relative p-6 min-h-[120px] rounded-xl border-3 transition-all duration-300 text-center hover:scale-105 shadow-md hover:shadow-lg ${
                         formData.category === category.name
-                          ? 'border-indigo-500 bg-indigo-50 text-indigo-700 shadow-lg transform scale-105'
-                          : 'border-gray-300 hover:border-indigo-300 hover:bg-gray-50'
+                          ? 'border-orange-500 bg-orange-50 text-orange-700 shadow-lg transform scale-105'
+                          : 'border-gray-300 hover:border-orange-300 hover:bg-gray-50'
                       }`}
                       style={{ minHeight: '120px' }} // Fitts's Law: Larger target area
                     >
@@ -1137,11 +1113,10 @@ const SubmitIdea = ({ isEditMode = false }) => {
                           setErrors(prev => ({ ...prev, difficulty: '' }));
                         }
                         console.log('Difficulty selected:', diff.level, 'New form data:', newFormData);
-                      }}
-                      className={`p-8 min-h-[160px] rounded-xl border-3 transition-all duration-300 text-left hover:scale-105 shadow-md hover:shadow-lg ${
+                      }}                      className={`p-8 min-h-[160px] rounded-xl border-3 transition-all duration-300 text-left hover:scale-105 shadow-md hover:shadow-lg ${
                         formData.difficulty === diff.level
-                          ? 'border-indigo-500 bg-indigo-50 text-indigo-700 shadow-lg transform scale-105'
-                          : 'border-gray-300 hover:border-indigo-300 hover:bg-gray-50'
+                          ? 'border-orange-500 bg-orange-50 text-orange-700 shadow-lg transform scale-105'
+                          : 'border-gray-300 hover:border-orange-300 hover:bg-gray-50'
                       }`}
                       style={{ minHeight: '160px' }} // Fitts's Law: Larger target area
                     >
@@ -1155,7 +1130,7 @@ const SubmitIdea = ({ isEditMode = false }) => {
                         </div>
                       </div>
                       <p className="text-base text-gray-600 mb-3 leading-relaxed">{diff.description}</p>
-                      <p className="text-sm text-indigo-600 font-semibold">⏱️ {diff.timeframe}</p>
+                      <p className="text-sm text-orange-600 font-semibold">⏱️ {diff.timeframe}</p>
                     </button>
                   ))}
                 </div>
@@ -1200,15 +1175,14 @@ const SubmitIdea = ({ isEditMode = false }) => {
                           setErrors(prev => ({ ...prev, estimatedTime: '' }));
                         }
                         console.log('Time estimate selected:', time.value, 'New form data:', newFormData);
-                      }}
-                      className={`relative p-6 min-h-[120px] rounded-lg border-3 transition-all duration-300 text-center hover:scale-105 shadow-md hover:shadow-lg ${
+                      }}                      className={`relative p-6 min-h-[120px] rounded-lg border-3 transition-all duration-300 text-center hover:scale-105 shadow-md hover:shadow-lg ${
                         formData.estimatedTime === time.value
-                          ? 'border-indigo-500 bg-indigo-50 text-indigo-700 shadow-lg transform scale-105'
-                          : 'border-gray-300 hover:border-indigo-300 hover:bg-gray-50'
+                          ? 'border-orange-500 bg-orange-50 text-orange-700 shadow-lg transform scale-105'
+                          : 'border-gray-300 hover:border-orange-300 hover:bg-gray-50'
                       }`}
                       style={{ minHeight: '120px' }} // Fitts's Law: Larger target area
                     >                      {time.popular && (
-                        <div className="absolute -top-2 -right-2 bg-blue-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-md">
+                        <div className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-3 py-1 rounded-full font-bold shadow-md">
                           ⭐ Popular
                         </div>
                       )}
@@ -1295,9 +1269,8 @@ const SubmitIdea = ({ isEditMode = false }) => {
             <div className="space-y-8">
               <div className="text-center mb-8">
                 <div className="text-6xl mb-4">👤</div>
-                <h2 className="text-3xl font-bold text-gray-900 mb-2">Contact Information</h2>
-                <p className="text-gray-600 max-w-2xl mx-auto">
-                  Let people know how to reach you if they're interested in collaborating.
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Contact Information</h2>                <p className="text-gray-600 max-w-2xl mx-auto">
+                  Let people know how to reach you if they're interested in learning more about your idea.
                 </p>
                 <div className="mt-4 inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
                   <span className="mr-2">🔒</span>
@@ -1315,9 +1288,8 @@ const SubmitIdea = ({ isEditMode = false }) => {
                     name="submitterName"
                     value={formData.submitterName}
                     onChange={handleInputChange}
-                    placeholder="Enter your full name"
-                    className={`w-full px-6 py-4 border-2 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 text-lg ${
-                      errors.submitterName ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-indigo-300'
+                    placeholder="Enter your full name"                    className={`w-full px-6 py-4 border-2 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300 text-lg ${
+                      errors.submitterName ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-orange-300'
                     }`}
                   />
                   {errors.submitterName && (
@@ -1334,9 +1306,8 @@ const SubmitIdea = ({ isEditMode = false }) => {
                     name="submitterEmail"
                     value={formData.submitterEmail}
                     onChange={handleInputChange}
-                    placeholder="your@email.com"
-                    className={`w-full px-6 py-4 border-2 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 text-lg ${
-                      errors.submitterEmail ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-indigo-300'
+                    placeholder="your@email.com"                    className={`w-full px-6 py-4 border-2 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300 text-lg ${
+                      errors.submitterEmail ? 'border-red-300 bg-red-50' : 'border-gray-300 hover:border-orange-300'
                     }`}
                   />
                   {errors.submitterEmail && (
@@ -1349,10 +1320,9 @@ const SubmitIdea = ({ isEditMode = false }) => {
               <div>
                 <label className="block text-lg font-semibold text-gray-700 mb-4">
                   How can people contact you?
-                </label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                </label>                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <label className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                    formData.contactPreference === 'email' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-300 hover:bg-gray-50'
+                    formData.contactPreference === 'email' ? 'border-orange-500 bg-orange-50' : 'border-gray-300 hover:bg-gray-50'
                   }`}>
                     <input
                       type="radio"
@@ -1360,7 +1330,7 @@ const SubmitIdea = ({ isEditMode = false }) => {
                       value="email"
                       checked={formData.contactPreference === 'email'}
                       onChange={handleInputChange}
-                      className="mr-3 w-5 h-5 text-indigo-600 focus:ring-indigo-500"
+                      className="mr-3 w-5 h-5 text-orange-600 focus:ring-orange-500"
                     />
                     <div>
                       <span className="text-lg font-medium">📧 Email Me</span>
@@ -1368,7 +1338,7 @@ const SubmitIdea = ({ isEditMode = false }) => {
                     </div>
                   </label>
                   <label className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all duration-300 ${
-                    formData.contactPreference === 'none' ? 'border-indigo-500 bg-indigo-50' : 'border-gray-300 hover:bg-gray-50'
+                    formData.contactPreference === 'none' ? 'border-orange-500 bg-orange-50' : 'border-gray-300 hover:bg-gray-50'
                   }`}>
                     <input
                       type="radio"
@@ -1376,7 +1346,7 @@ const SubmitIdea = ({ isEditMode = false }) => {
                       value="none"
                       checked={formData.contactPreference === 'none'}
                       onChange={handleInputChange}
-                      className="mr-3 w-5 h-5 text-indigo-600 focus:ring-indigo-500"
+                      className="mr-3 w-5 h-5 text-orange-600 focus:ring-orange-500"
                     />
                     <div>
                       <span className="text-lg font-medium">🔒 Anonymous</span>
@@ -1479,4 +1449,6 @@ const SubmitIdea = ({ isEditMode = false }) => {
   );
 };
 
+
 export default SubmitIdea;
+

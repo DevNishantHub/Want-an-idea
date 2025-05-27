@@ -46,18 +46,12 @@ project_ideas {
     publishedAt: Timestamp (Optional)
     lastUpdatedAt: Timestamp
     viewCount: Long (Default: 0)
-    likeCount: Long (Default: 0)
-    commentCount: Long (Default: 0)
-    collaboratorCount: Long (Default: 0)
-    budgetMin: Decimal (Optional)
-    budgetMax: Decimal (Optional)
-    budgetCurrency: String (Default: USD)
+    likeCount: Long (Default: 0)    commentCount: Long (Default: 0)
     requiredSkills: Text (Comma-separated skills)
     techStack: Text (JSON Array of technologies)
     resources: Text (Links, articles, references)
     projectTimeline: Text (JSON Array of phases)
-    collaboratorsNeeded: Integer (Default: 0)
-    isOpenForCollaboration: Boolean (Default: true)
+    isOpenForInspiration: Boolean (Default: true)
     rejectionReason: Text (Optional)
     featuredAt: Timestamp (Optional, for featured projects)
     moderatorNotes: Text (Optional, admin/moderator use)
@@ -122,7 +116,7 @@ comments {
 }
 ```
 
-### 4. Messaging & Collaboration
+### 4. Messaging
 #### Messages Entity
 ```sql
 messages {
@@ -133,30 +127,12 @@ messages {
     senderEmail: String (For non-registered users)
     recipientId: Long (Foreign Key to users.id, project owner)
     subject: String (Optional)
-    content: Text (Not Null)
-    messageType: Enum (COLLABORATION_REQUEST, GENERAL_INQUIRY, FEEDBACK)
+    content: Text (Not Null)    messageType: Enum (GENERAL_INQUIRY, FEEDBACK)
     isRead: Boolean (Default: false)
     readAt: Timestamp (Optional)
     sentAt: Timestamp
     isArchived: Boolean (Default: false)
     isSpam: Boolean (Default: false)
-}
-```
-
-#### Collaborations Entity
-```sql
-collaborations {
-    id: Long (Primary Key, Auto-generated)
-    projectId: Long (Foreign Key to project_ideas.id)
-    userId: Long (Foreign Key to users.id)
-    role: String (Developer, Designer, Manager, etc.)
-    status: Enum (REQUESTED, ACCEPTED, DECLINED, ACTIVE, COMPLETED)
-    requestedAt: Timestamp
-    respondedAt: Timestamp (Optional)
-    joinedAt: Timestamp (Optional)
-    leftAt: Timestamp (Optional)
-    contribution: Text (Description of their contribution)
-    skills: Text (JSON Array of relevant skills)
 }
 ```
 
@@ -196,12 +172,10 @@ user_activities {
 project_stats {
     id: Long (Primary Key, Auto-generated)
     projectId: Long (Foreign Key to project_ideas.id)
-    date: Date
-    viewCount: Long (Default: 0)
+    date: Date    viewCount: Long (Default: 0)
     likeCount: Long (Default: 0)
     commentCount: Long (Default: 0)
     shareCount: Long (Default: 0)
-    collaborationRequests: Long (Default: 0)
 }
 ```
 
@@ -277,7 +251,7 @@ GET /api/users/{userId}/public-profile
 
 GET /api/users/me/stats
 - Headers: Authorization Bearer token
-- Response: { submissionsCount, likesReceived, viewsReceived, collaborations }
+- Response: { submissionsCount, likesReceived, viewsReceived, sharesReceived }
 ```
 
 ### 2. Project Ideas Management
@@ -293,7 +267,7 @@ GET /api/projects/{id}
 
 POST /api/projects
 - Headers: Authorization Bearer token
-- Request Body: { title, description, category, difficulty, estimatedTime, requiredSkills, tags, techStack, resources, budgetMin, budgetMax, collaboratorsNeeded, contactPreference }
+- Request Body: { title, description, category, difficulty, estimatedTime, requiredSkills, tags, techStack, resources, isOpenForInspiration, contactPreference }
 - Response: Created ProjectIdea
 
 PUT /api/projects/{id}
@@ -308,7 +282,7 @@ DELETE /api/projects/{id}
 - Response: 204 No Content
 
 GET /api/projects/{id}/stats
-- Response: { views, likes, comments, collaborationRequests }
+- Response: { views, likes, comments, shares }
 
 POST /api/projects/{id}/like
 - Headers: Authorization Bearer token
@@ -354,7 +328,7 @@ UNDER_REVIEW: Limited editing allowed
 - Moderator notification sent when edited during review
 
 PUBLISHED: Controlled editing allowed
-- Can edit: description, resources, timeline, collaboration settings
+- Can edit: description, resources, timeline, inspiration settings
 - Cannot edit: title, category, difficulty (requires re-review)
 - Major changes may require re-review (admin configurable)
 - Edit history tracked for transparency
@@ -397,14 +371,8 @@ Skills & Tech Stack:
 - Validation against predefined skill list
 - Maximum 20 skills/technologies
 
-Budget:
-- budgetMin <= budgetMax
-- Must be positive numbers
-- Currency validation
-
-Collaboration Settings:
-- collaboratorsNeeded: 0-50
-- isOpenForCollaboration: boolean
+Inspiration Settings:
+- isOpenForInspiration: boolean (allows others to build upon the idea)
 ```
 
 **4. Edit Impact on Engagement Data**
@@ -412,7 +380,7 @@ Collaboration Settings:
 Views: Preserved (historical data)
 Likes: Preserved (users who liked keep their likes)
 Comments: Preserved (comments stay linked to project)
-Collaboration Requests: Preserved (active requests remain valid)
+Messages: Preserved (messages stay linked to project)
 Analytics: Edit timestamp recorded, historical data maintained
 ```
 
@@ -422,8 +390,7 @@ Minor Edits (No re-review required):
 - Description updates
 - Resource links
 - Timeline adjustments
-- Collaboration settings
-- Budget changes
+- Inspiration settings
 
 Major Edits (Re-review required):
 - Title changes
@@ -571,7 +538,7 @@ POST /api/comments/{id}/like
 - Response: { liked: true/false, totalLikes }
 ```
 
-### 4. Messaging & Collaboration
+### 4. Messaging
 
 #### Messages Controller
 ```
@@ -600,27 +567,6 @@ POST /api/messages/{id}/archive
 POST /api/messages/{id}/spam
 - Headers: Authorization Bearer token
 - Response: 200 OK
-```
-
-#### Collaboration Controller
-```
-POST /api/projects/{projectId}/collaborate
-- Headers: Authorization Bearer token
-- Request Body: { role, skills, message }
-- Response: Created Collaboration
-
-GET /api/users/me/collaborations
-- Headers: Authorization Bearer token
-- Query Params: ?status=ACTIVE
-- Response: List<Collaboration>
-
-PUT /api/collaborations/{id}/status
-- Headers: Authorization Bearer token
-- Request Body: { status, response? }
-- Response: Updated Collaboration
-
-GET /api/projects/{projectId}/collaborators
-- Response: List of project collaborators
 ```
 
 ### 5. Categories & Tags
@@ -776,14 +722,14 @@ GET /api/analytics/trending
 - Email verification
 - Password reset emails
 - Project status updates
-- Collaboration requests
+- New message notifications
 - Weekly digest of new projects
 - Comment notifications
 
 ### 2. In-App Notifications
 - Real-time notifications for messages
 - Project approval/rejection notifications
-- Collaboration status updates
+- Message notifications
 - Like and comment notifications
 - System announcements
 

@@ -48,22 +48,35 @@ const Navbar = () => {
     { path: '/browse', label: 'Browse', icon: '🔍' },
     { path: '/submit', label: 'Submit', icon: '✨', highlight: true },
     { path: '/my-submissions', label: 'My Ideas', icon: '📋' }
-  ];
-
-  return (    <nav className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 shadow-lg relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo/Brand */}
+  ];  return (
+    <nav className="bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 shadow-2xl relative backdrop-blur-sm border-b border-orange-200">
+      {/* Animated background elements to match HeroSection */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-1/2 -left-1/2 w-full h-full bg-gradient-to-r from-yellow-300/10 to-orange-300/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-1/2 -right-1/2 w-full h-full bg-gradient-to-l from-orange-300/10 to-pink-300/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        
+        {/* Floating geometric shapes like HeroSection */}
+        <div className="absolute top-4 left-10 w-8 h-8 bg-yellow-300/30 rounded-full animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}></div>
+        <div className="absolute top-2 right-20 w-6 h-6 bg-orange-400/20 rotate-45 animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="absolute top-6 right-1/4 w-4 h-4 bg-pink-400/25 rounded-full animate-bounce" style={{animationDelay: '2s', animationDuration: '4s'}}></div>
+      </div>
+      
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="flex justify-between items-center h-16">          {/* Logo/Brand */}
           <div 
-            className={`flex items-center cursor-pointer group transition-all duration-200 hover:scale-105 px-2 py-2 rounded-lg hover:bg-white/10 ${
+            className={`flex items-center cursor-pointer group transition-all duration-300 hover:scale-105 px-2 py-2 rounded-lg hover:bg-white/20 ${
               isNavigating ? 'opacity-50' : ''
             }`}
             onClick={() => handleNavigation('/')}
           >
-            <span className="text-3xl mr-2">💡</span>
-            <span className="text-xl font-bold text-white tracking-wide">WantAnIdea</span>
+            <div className="p-2 bg-gradient-to-br from-orange-500 to-pink-600 rounded-xl shadow-lg group-hover:shadow-xl group-hover:shadow-orange-500/25 transition-all duration-300 mr-2">
+              <span className="text-white text-xl animate-pulse">💡</span>
+            </div>
+            <span className="text-xl font-bold bg-gradient-to-r from-orange-600 via-red-600 to-pink-600 bg-clip-text text-transparent group-hover:from-orange-500 group-hover:via-red-500 group-hover:to-pink-500 transition-all duration-300 tracking-wide">
+              WantAnIdea
+            </span>
             {isNavigating && (
-              <div className="ml-2 animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+              <div className="ml-2 animate-spin rounded-full h-4 w-4 border-b-2 border-orange-500"></div>
             )}
           </div>
 
@@ -74,14 +87,13 @@ const Navbar = () => {
               <button 
                 key={item.path}
                 onClick={() => handleNavigation(item.path)}
-                disabled={isNavigating}
-                className={`
-                  px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 transform hover:scale-105
+                disabled={isNavigating}                className={`
+                  px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 transform hover:scale-105 backdrop-blur-sm
                   ${item.highlight 
-                    ? 'bg-gradient-to-r from-yellow-400 to-orange-400 text-white shadow-md hover:shadow-lg' 
+                    ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white shadow-lg hover:shadow-xl hover:shadow-orange-500/25 border border-orange-400/30' 
                     : isActive(item.path)
-                      ? 'bg-white/20 text-white shadow-sm'
-                      : 'text-indigo-200 hover:bg-white/10 hover:text-white'
+                      ? 'bg-gradient-to-r from-orange-500/20 to-pink-600/20 text-orange-800 shadow-lg border border-orange-400/40'
+                      : 'text-orange-700 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 hover:text-orange-800 border border-transparent hover:border-orange-400/20'
                   }
                   ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}
                 `}
@@ -89,14 +101,12 @@ const Navbar = () => {
                 <span className="mr-2">{item.icon}</span>
                 {item.label}
               </button>
-            ))}
-            
-            {/* Auth Buttons */}
-            <div className="flex items-center space-x-2 ml-6 pl-6 border-l border-white/20">
+            ))}            {/* Auth Buttons */}
+            <div className="flex items-center space-x-2 ml-6 pl-6 border-l border-orange-400/30">
               <button
                 onClick={() => handleNavigation('/auth?mode=login')}
                 disabled={isNavigating}
-                className={`text-indigo-200 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-white/10 ${
+                className={`text-orange-700 hover:text-orange-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 backdrop-blur-sm border border-transparent hover:border-orange-400/20 ${
                   isNavigating ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
@@ -105,7 +115,7 @@ const Navbar = () => {
               <button 
                 onClick={() => handleNavigation('/auth?mode=signup')}
                 disabled={isNavigating}
-                className={`bg-white text-indigo-700 hover:bg-indigo-50 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 ${
+                className={`bg-gradient-to-r from-orange-500 to-red-600 text-white hover:from-orange-400 hover:to-red-500 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-orange-500/25 transform hover:scale-105 border border-orange-400/30 ${
                   isNavigating ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
@@ -115,10 +125,9 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
-            <button 
+          <div className="md:hidden">            <button 
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-white hover:text-indigo-200 inline-flex items-center justify-center p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-white transition-colors duration-200 hover:bg-white/10"
+              className="text-orange-700 hover:text-orange-800 inline-flex items-center justify-center p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-400 transition-colors duration-300 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 backdrop-blur-sm border border-transparent hover:border-orange-400/20"
               aria-label="Toggle menu"
             >
               <svg 
@@ -135,11 +144,9 @@ const Navbar = () => {
               </svg>
             </button>
           </div>
-        </div>
-
-        {/* Mobile Menu */}
+        </div>        {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden bg-indigo-700/95 border-t border-white/20">
+          <div className="md:hidden bg-gradient-to-br from-yellow-100/95 via-orange-100/95 to-pink-100/95 border-t border-orange-300/30 backdrop-blur-sm">
             <div className="px-4 py-6 space-y-4">
               {/* Navigation Items */}
               {navItems.map((item) => (
@@ -147,12 +154,12 @@ const Navbar = () => {
                   key={item.path}
                   onClick={() => handleNavigation(item.path)}
                   className={`
-                    w-full text-left px-4 py-3 rounded-lg transition-all duration-200 flex items-center
+                    w-full text-left px-4 py-3 rounded-lg transition-all duration-300 flex items-center backdrop-blur-sm
                     ${item.highlight
-                      ? 'bg-gradient-to-r from-yellow-400/20 to-orange-400/20 text-white border border-yellow-300/30'
+                      ? 'bg-gradient-to-r from-orange-500/20 to-red-600/20 text-orange-900 border border-orange-400/40 shadow-lg'
                       : isActive(item.path) 
-                        ? 'bg-white/20 text-white border border-white/30' 
-                        : 'text-indigo-200 hover:bg-white/10 hover:text-white border border-transparent'
+                        ? 'bg-gradient-to-r from-orange-500/15 to-pink-600/15 text-orange-800 border border-orange-400/30 shadow-md' 
+                        : 'text-orange-700 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 hover:text-orange-800 border border-transparent hover:border-orange-400/20'
                     }
                   `}
                 >
@@ -162,16 +169,15 @@ const Navbar = () => {
               ))}
               
               {/* Auth Buttons */}
-              <div className="border-t border-white/20 pt-4 space-y-3">
-                <button 
+              <div className="border-t border-orange-400/30 pt-4 space-y-3">                <button 
                   onClick={() => handleNavigation('/auth?mode=signup')}
-                  className="w-full bg-white text-indigo-700 px-4 py-3 rounded-lg font-bold transition-all duration-200 shadow-md hover:shadow-lg"
+                  className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-3 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:from-orange-400 hover:to-red-500 border border-orange-400/30"
                 >
                   Sign Up
                 </button>
                 <button 
                   onClick={() => handleNavigation('/auth?mode=login')}
-                  className="w-full text-indigo-200 hover:text-white px-4 py-3 rounded-lg font-medium transition-all duration-200 hover:bg-white/10 border border-transparent hover:border-white/20"
+                  className="w-full text-orange-700 hover:text-orange-800 px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 border border-transparent hover:border-orange-400/20 backdrop-blur-sm"
                 >
                   Sign In
                 </button>

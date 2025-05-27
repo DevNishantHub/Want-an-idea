@@ -468,48 +468,58 @@ const MySubmissions = () => {
     return { total, published, underReview, totalViews, totalLikes };
   };
 
-  const stats = getStatsData();
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  const stats = getStatsData();  return (
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 relative overflow-hidden">
+      {/* Creative Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 right-20 w-32 h-32 bg-yellow-300/30 rounded-full animate-bounce" style={{animationDelay: '0s', animationDuration: '3s'}}></div>
+        <div className="absolute top-40 left-20 w-16 h-16 bg-orange-400/20 rotate-45 animate-pulse" style={{animationDelay: '1s'}}></div>
+        <div className="absolute bottom-32 right-1/4 w-12 h-12 bg-pink-400/25 rounded-full animate-bounce" style={{animationDelay: '2s', animationDuration: '4s'}}></div>
+        <div className="absolute top-60 right-1/3 w-8 h-8 bg-red-400/30 rotate-12 animate-spin" style={{animationDuration: '8s'}}></div>
+        <div className="absolute bottom-20 left-1/3 w-14 h-14 bg-purple-400/20 rounded-lg animate-pulse" style={{animationDelay: '3s'}}></div>
+        
+        {/* Dotted pattern overlay */}
+        <div className="absolute inset-0 opacity-10" style={{
+          backgroundImage: `radial-gradient(circle, #f97316 1px, transparent 1px)`,
+          backgroundSize: '50px 50px'
+        }}></div>
+      </div>      
       {/* Page Header */}
-      <div className="bg-white shadow-sm">        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="bg-white/90 backdrop-blur-lg border-b-2 border-orange-200 shadow-2xl shadow-orange-500/25 relative z-10">        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                📝 My Ideas
+              <h1 className="text-4xl font-black text-gray-900 mb-4">
+                💡 My Ideas
               </h1>
-              <p className="text-xl text-gray-600">
-                Track and manage your submitted project ideas
+              <p className="text-xl text-gray-700 font-bold">
+                Track and manage your brilliant submissions
               </p>
             </div>
             <button
               onClick={() => navigate('/submit')}
-              className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors duration-200 font-medium flex items-center"
+              className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white px-6 py-3 rounded-lg transition-all duration-300 font-black flex items-center transform hover:scale-110 shadow-lg shadow-orange-500/50"
             >
               <span className="mr-2">✨</span>
               Submit New Idea
             </button>
-          </div>
-        </div>
-      </div>      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">        {/* Chunked Statistics Dashboard */}
-        <div className="mb-8">
+          </div>        </div>
+      </div><div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 relative z-10">{/* Chunked Statistics Dashboard */}        <div className="mb-8">
           <button 
             onClick={() => setShowStats(!showStats)}
-            className="w-full bg-white rounded-lg shadow-md p-4 text-left hover:shadow-lg transition-shadow duration-200"
+            className="w-full bg-white/90 backdrop-blur-lg border-2 border-orange-200 rounded-lg shadow-2xl shadow-orange-500/25 p-4 text-left hover:shadow-2xl hover:shadow-pink-500/25 transition-all duration-300"
           >
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <span className="text-2xl mr-3">📊</span>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">My Statistics</h3>
-                  <p className="text-sm text-gray-600">
+                  <h3 className="text-lg font-black text-gray-900">Your Idea Dashboard</h3>
+                  <p className="text-sm text-gray-700 font-bold">
                     {stats.total} total ideas • {stats.published} published
                   </p>
                 </div>
               </div>
               <svg 
-                className={`w-5 h-5 text-gray-400 transform transition-transform ${showStats ? 'rotate-180' : ''}`} 
+                className={`w-5 h-5 text-orange-500 transform transition-transform ${showStats ? 'rotate-180' : ''}`} 
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -519,77 +529,73 @@ const MySubmissions = () => {
             </div>
           </button>
           
-          {showStats && (
-            <div className="mt-4 space-y-4">
+          {showStats && (            <div className="mt-4 space-y-4">
               {/* Idea Status Chunk */}
-              <div className="bg-blue-50/50 rounded-lg p-4">
-                <h4 className="text-sm font-semibold text-blue-800 mb-3 flex items-center">
-                  📝 My Ideas Status
+              <div className="bg-white/80 backdrop-blur-lg border border-orange-200 rounded-lg p-4 shadow-lg">
+                <h4 className="text-sm font-black text-orange-600 mb-3 flex items-center">
+                  💡 Idea Status Overview
                 </h4>
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-white rounded-lg shadow-sm p-3 text-center border">
-                    <div className="text-xl font-bold text-indigo-600">{stats.total}</div>
-                    <div className="text-xs text-gray-600">Total Ideas</div>
+                  <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-lg shadow-lg p-3 text-center border border-orange-200">
+                    <div className="text-xl font-black text-orange-600">{stats.total}</div>
+                    <div className="text-xs font-bold text-gray-700">Total Ideas</div>
                   </div>
-                  <div className="bg-white rounded-lg shadow-sm p-3 text-center border">
-                    <div className="text-xl font-bold text-green-600">{stats.published}</div>
-                    <div className="text-xs text-gray-600">Published</div>
+                  <div className="bg-gradient-to-br from-pink-50 to-red-50 rounded-lg shadow-lg p-3 text-center border border-pink-200">
+                    <div className="text-xl font-black text-pink-600">{stats.published}</div>
+                    <div className="text-xs font-bold text-gray-700">Published</div>
                   </div>
-                  <div className="bg-white rounded-lg shadow-sm p-3 text-center border">
-                    <div className="text-xl font-bold text-yellow-600">{stats.underReview}</div>
-                    <div className="text-xs text-gray-600">Under Review</div>
+                  <div className="bg-gradient-to-br from-purple-50 to-indigo-50 rounded-lg shadow-lg p-3 text-center border border-purple-200">
+                    <div className="text-xl font-black text-purple-600">{stats.underReview}</div>
+                    <div className="text-xs font-bold text-gray-700">Under Review</div>
                   </div>
                 </div>
-              </div>
-              
+              </div>              
               {/* Engagement Metrics Chunk */}
-              <div className="bg-purple-50/50 rounded-lg p-4">
-                <h4 className="text-sm font-semibold text-purple-800 mb-3 flex items-center">
-                  📈 Community Engagement
+              <div className="bg-white/80 backdrop-blur-lg border border-pink-200 rounded-lg p-4 shadow-lg">
+                <h4 className="text-sm font-black text-pink-600 mb-3 flex items-center">
+                  ❤️ Community Engagement
                 </h4>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white rounded-lg shadow-sm p-3 text-center border">
-                    <div className="text-xl font-bold text-blue-600">{stats.totalViews}</div>
-                    <div className="text-xs text-gray-600">Total Views</div>
+                  <div className="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-lg shadow-lg p-3 text-center border border-orange-200">
+                    <div className="text-xl font-black text-orange-600">{stats.totalViews}</div>
+                    <div className="text-xs font-bold text-gray-700">Total Views</div>
                   </div>
-                  <div className="bg-white rounded-lg shadow-sm p-3 text-center border">
-                    <div className="text-xl font-bold text-purple-600">{stats.totalLikes}</div>
-                    <div className="text-xs text-gray-600">Total Likes</div>
+                  <div className="bg-gradient-to-br from-red-50 to-pink-50 rounded-lg shadow-lg p-3 text-center border border-red-200">
+                    <div className="text-xl font-black text-red-600">{stats.totalLikes}</div>
+                    <div className="text-xs font-bold text-gray-700">Total Likes</div>
                   </div>
                 </div>
               </div>
             </div>
           )}
         </div>        {/* Chunked Search and Filter Interface */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+        <div className="bg-white/90 backdrop-blur-lg border-2 border-orange-200 rounded-lg shadow-2xl shadow-orange-500/25 p-6 mb-8">
           {/* Search Chunk - Primary Discovery Tool */}
-          <div className="mb-6 p-4 bg-gradient-to-r from-indigo-50 to-blue-50 rounded-lg border border-indigo-100">
-            <h3 className="text-sm font-semibold text-indigo-800 mb-3 flex items-center">
-              🔍 Find Your Ideas
+          <div className="mb-6 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 backdrop-blur-lg rounded-lg border border-orange-200">
+            <h3 className="text-sm font-black text-orange-600 mb-3 flex items-center">
+              🔍 Search Your Ideas
             </h3>
             <div className="relative">
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="🔍 Search your ideas..."
-                className="w-full pl-4 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
+                placeholder="🔍 Search your brilliant ideas..."
+                className="w-full pl-4 pr-4 py-3 bg-white/80 backdrop-blur-lg border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-lg text-gray-900 placeholder-gray-500 shadow-lg"
               />
             </div>
-          </div>
-
-          {/* Filter Chunk - Organize by Status */}
-          <div className="p-4 bg-gradient-to-r from-gray-50 to-slate-50 rounded-lg border border-gray-200">
+          </div>          {/* Filter Chunk - Organize by Status */}
+          <div className="p-4 bg-gradient-to-r from-pink-50 to-red-50 backdrop-blur-lg rounded-lg border border-pink-200">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-sm font-semibold text-gray-800 flex items-center">
-                📋 Filter by Status
+              <h3 className="text-sm font-black text-pink-600 flex items-center">
+                💡 Idea Status Filter
               </h3>
               {(searchTerm || statusFilter !== 'All') && (
                 <button
                   onClick={clearFilters}
-                  className="text-sm text-indigo-600 hover:text-indigo-800 underline font-medium"
+                  className="text-sm text-orange-600 hover:text-orange-700 underline font-black transition-colors duration-300"
                 >
-                  Clear filters
+                  Clear Filters
                 </button>
               )}
             </div>
@@ -598,11 +604,11 @@ const MySubmissions = () => {
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg"
+                  className="w-full px-4 py-3 bg-white/80 backdrop-blur-lg border border-pink-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 text-lg text-gray-900 shadow-lg"
                 >
                   {statusOptions.map(status => (
-                    <option key={status} value={status}>
-                      {status === 'All' ? '📋 All Status' : 
+                    <option key={status} value={status} className="bg-white text-gray-900">
+                      {status === 'All' ? '💡 All Ideas' : 
                        status === 'Published' ? '✅ Published' :
                        status === 'Under Review' ? '⏳ Under Review' :
                        status === 'Draft' ? '📝 Draft' : status}
@@ -610,15 +616,15 @@ const MySubmissions = () => {
                   ))}
                 </select>
               </div>
-              <div className="text-sm text-gray-600">
-                Showing <span className="font-semibold text-indigo-600">{filteredAndSortedIdeas.length}</span> of {submittedIdeas.length} ideas
+              <div className="text-sm text-gray-700 font-bold">
+                Showing <span className="font-black text-orange-600">{filteredAndSortedIdeas.length}</span> of {submittedIdeas.length} ideas
               </div>
             </div>
           </div>          {/* Progressive Disclosure for Advanced Options */}
-          <div className="mt-4 pt-4 border-t border-gray-200">
+          <div className="mt-4 pt-4 border-t border-orange-300">
             <button
               onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              className="text-sm text-gray-500 hover:text-gray-700 flex items-center"
+              className="text-sm text-gray-700 hover:text-orange-600 flex items-center font-bold transition-colors duration-300"
             >
               ⚙️ Advanced Options
               <svg 
@@ -632,19 +638,19 @@ const MySubmissions = () => {
             </button>
             
             {showAdvancedFilters && (
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+              <div className="mt-4 p-4 bg-white/60 backdrop-blur-lg border border-orange-200 rounded-lg">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="flex-1">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Filter by All Status Types
+                    <label className="block text-sm font-black text-orange-600 mb-2">
+                      Filter by All Idea Types
                     </label>
                     <select
                       value={statusFilter}
                       onChange={(e) => setStatusFilter(e.target.value)}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                      className="w-full px-3 py-2 bg-white/80 backdrop-blur-lg border border-orange-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-gray-900 shadow-lg"
                     >
                       {allStatusOptions.map(status => (
-                        <option key={status} value={status}>{status}</option>
+                        <option key={status} value={status} className="bg-white text-gray-900">{status}</option>
                       ))}
                     </select>
                   </div>
@@ -654,54 +660,61 @@ const MySubmissions = () => {
           </div>
         </div>
 
-        {/* Results Section */}
-        {filteredAndSortedIdeas.length === 0 ? (          <div className="bg-white rounded-xl shadow-lg p-12 text-center">
-            <div className="text-6xl mb-4">💡</div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-4">No Ideas Found</h3>
-            <p className="text-gray-600 mb-6">
+        {/* Results Section */}        {filteredAndSortedIdeas.length === 0 ? (
+          <div className="bg-white/90 backdrop-blur-lg border-2 border-orange-200 rounded-xl shadow-2xl shadow-orange-500/25 p-12 text-center">
+            <div className="text-6xl mb-4 animate-bounce">💡</div>
+            <h3 className="text-2xl font-black text-gray-900 mb-4">No Ideas Found</h3>
+            <p className="text-gray-700 mb-6 font-bold">
               {submittedIdeas.length === 0 
-                ? "You haven't shared any ideas yet. Start by submitting your first innovative project idea!"
-                : "No ideas match your current search. Try adjusting your filters."
+                ? "You haven't submitted any ideas yet. Start by sharing your first brilliant idea with the community!"
+                : "No ideas match your current search. Try adjusting your filters or search terms."
               }
             </p>
             <div className="space-x-4">
               {submittedIdeas.length === 0 ? (
                 <button
                   onClick={() => navigate('/submit')}
-                  className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                  className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white px-6 py-3 rounded-lg transition-all duration-300 font-black transform hover:scale-110 shadow-lg shadow-orange-500/50"
                 >
-                  ✨ Submit Your First Idea
+                  ✨ Submit First Idea
                 </button>
               ) : (
                 <button
                   onClick={clearFilters}
-                  className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors duration-200"
+                  className="bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 text-white px-6 py-3 rounded-lg transition-all duration-300 font-black transform hover:scale-110 shadow-lg shadow-orange-500/50"
                 >
                   Clear Filters
                 </button>
               )}
             </div>
-          </div>
-        ) : (
+          </div>        ) : (
           <div className="space-y-6">
             {filteredAndSortedIdeas.map((idea) => (
-              <div key={idea.id} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden">
+              <div key={idea.id} className="bg-white/90 backdrop-blur-lg border-2 border-orange-200 rounded-xl shadow-2xl shadow-orange-500/25 hover:shadow-2xl hover:shadow-pink-500/25 transition-all duration-300 overflow-hidden transform hover:scale-105">
                 <div className="p-6">
                   {/* Header with Status */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      <h3 className="text-xl font-black text-gray-900 mb-2">
                         {idea.title}
                       </h3>
-                      <div className="flex items-center gap-4 text-sm text-gray-500">
+                      <div className="flex items-center gap-4 text-sm text-gray-700 font-bold">
                         <span>Submitted: {formatDate(idea.submittedDate)}</span>
                         <span>•</span>
                         <span>Updated: {formatDate(idea.lastUpdated)}</span>
                         <span>•</span>
                         <span className="capitalize">{idea.category} • {idea.difficulty}</span>
                       </div>
-                    </div>                    <div className="flex items-center gap-3 ml-4">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium border flex items-center gap-1 ${getStatusColor(idea.status)}`}>
+                    </div>
+                    <div className="flex items-center gap-3 ml-4">
+                      <span className={`px-3 py-1 rounded-full text-xs font-black border flex items-center gap-1 backdrop-blur-lg shadow-lg ${
+                        idea.status === 'Draft' ? 'bg-gray-100 text-gray-800 border-gray-300' :
+                        idea.status === 'Under Review' ? 'bg-yellow-100 text-yellow-800 border-yellow-300' :
+                        idea.status === 'Approved' ? 'bg-blue-100 text-blue-800 border-blue-300' :
+                        idea.status === 'Published' ? 'bg-green-100 text-green-800 border-green-300' :
+                        idea.status === 'Rejected' ? 'bg-red-100 text-red-800 border-red-300' :
+                        'bg-gray-100 text-gray-800 border-gray-300'
+                      }`}>
                         <span className="text-sm">{getStatusEmoji(idea.status)}</span>
                         {idea.status}
                       </span>
@@ -709,7 +722,7 @@ const MySubmissions = () => {
                   </div>
 
                   {/* Description */}
-                  <p className="text-gray-600 mb-4 line-clamp-2">
+                  <p className="text-gray-700 mb-4 line-clamp-2 font-medium">
                     {idea.description}
                   </p>
 
@@ -717,21 +730,21 @@ const MySubmissions = () => {
                   {idea.tags && (
                     <div className="flex flex-wrap gap-2 mb-4">
                       {idea.tags.split(', ').map((tag, index) => (
-                        <span key={index} className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded-md">
+                        <span key={index} className="px-2 py-1 bg-orange-100 text-orange-800 text-xs rounded-md border border-orange-200 font-bold">
                           {tag}
                         </span>
                       ))}
                     </div>
                   )}                  {/* Rejection Reason */}
                   {idea.status === 'Rejected' && idea.rejectionReason && (
-                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                      <h4 className="text-sm font-medium text-red-800 mb-1">Rejection Reason:</h4>
-                      <p className="text-sm text-red-700 mb-3">{idea.rejectionReason}</p>
+                    <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 shadow-lg">
+                      <h4 className="text-sm font-black text-red-800 mb-1">Rejection Reason:</h4>
+                      <p className="text-sm text-red-700 mb-3 font-medium">{idea.rejectionReason}</p>
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-red-600">You can edit and resubmit this idea</span>
+                        <span className="text-xs text-red-600 font-bold">You can modify and resubmit this idea</span>
                         <button 
                           onClick={() => navigate(`/edit/${idea.id}`)}
-                          className="px-3 py-1 text-xs font-medium text-white bg-red-600 hover:bg-red-700 rounded transition-colors duration-200"
+                          className="px-3 py-1 text-xs font-black text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded transition-all duration-300 transform hover:scale-110 shadow-lg"
                         >
                           Edit & Resubmit
                         </button>
@@ -741,42 +754,43 @@ const MySubmissions = () => {
 
                   {/* Draft Notice */}
                   {idea.status === 'Draft' && (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4">
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 shadow-lg">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-yellow-800">
-                          <span className="font-medium">Draft:</span> Complete your submission to get it reviewed
+                        <span className="text-sm text-yellow-800 font-bold">
+                          <span className="font-black">Draft Status:</span> Complete your idea submission for review
                         </span>
                         <button 
                           onClick={() => navigate(`/edit/${idea.id}`)}
-                          className="px-3 py-1 text-xs font-medium text-white bg-yellow-600 hover:bg-yellow-700 rounded transition-colors duration-200"
+                          className="px-3 py-1 text-xs font-black text-white bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 rounded transition-all duration-300 transform hover:scale-110 shadow-lg"
                         >
-                          Complete
+                          Complete Submission
                         </button>
                       </div>
                     </div>
-                  )}                  {/* Stats and Actions */}
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-200">
-                    <div className="flex items-center gap-4 text-sm text-gray-500">
+                  )}
+
+                  {/* Stats and Actions */}
+                  <div className="flex items-center justify-between pt-4 border-t border-orange-200">
+                    <div className="flex items-center gap-4 text-sm text-gray-700 font-bold">
                       <span>👁️ {idea.views}</span>
                       <span>❤️ {idea.likes}</span>
                       <span>💬 {idea.comments}</span>
-                    </div>
-                    
-                    {/* Simplified Actions */}
+                    </div>                    
+                    {/* Action Buttons */}
                     <div className="flex items-center gap-2">
                       {/* Primary Action based on status */}
                       {idea.status === 'Draft' && (
                         <button 
                           onClick={() => navigate(`/edit/${idea.id}`)}
-                          className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors duration-200"
+                          className="px-4 py-2 text-sm font-black text-white bg-gradient-to-r from-orange-500 to-pink-500 hover:from-orange-600 hover:to-pink-600 rounded-lg transition-all duration-300 transform hover:scale-110 shadow-lg shadow-orange-500/50"
                         >
-                          Complete
+                          Complete Submission
                         </button>
                       )}
                       {idea.status === 'Rejected' && (
                         <button 
                           onClick={() => navigate(`/edit/${idea.id}`)}
-                          className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg transition-colors duration-200"
+                          className="px-4 py-2 text-sm font-black text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-lg transition-all duration-300 transform hover:scale-110 shadow-lg shadow-red-500/50"
                         >
                           Edit & Resubmit
                         </button>
@@ -784,18 +798,18 @@ const MySubmissions = () => {
                       {idea.status === 'Published' && (
                         <button 
                           onClick={() => navigate(`/project/${idea.id}`)}
-                          className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg transition-colors duration-200"
+                          className="px-4 py-2 text-sm font-black text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-lg transition-all duration-300 transform hover:scale-110 shadow-lg shadow-green-500/50"
                         >
-                          View Live
+                          View Published
                         </button>
                       )}
                       
                       {/* Secondary Action */}
                       <button 
                         onClick={() => navigate(`/project/${idea.id}`)}
-                        className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-800 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+                        className="px-4 py-2 text-sm font-black text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-300 border border-orange-200"
                       >
-                        Details
+                        View Details
                       </button>
                     </div>
                   </div>

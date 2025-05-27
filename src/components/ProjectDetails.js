@@ -38,8 +38,8 @@ const ProjectToast = ({ message, type, isVisible, onHide, actionButton }) => {
         rounded-2xl p-5 shadow-2xl border-l-4 backdrop-blur-sm max-w-sm
         ${type === 'success' ? 'bg-white border-green-500 text-gray-900' :
           type === 'error' ? 'bg-white border-red-500 text-gray-900' :
-          type === 'info' ? 'bg-white border-blue-500 text-gray-900' :
-          'bg-white border-gray-400 text-gray-900'
+          type === 'info' ? 'bg-white border-orange-500 text-gray-900' :
+          'bg-white border-orange-400 text-gray-900'
         }
       `}>
         {/* Gestalt: Proximity - Icon and content closely grouped */}
@@ -48,8 +48,8 @@ const ProjectToast = ({ message, type, isVisible, onHide, actionButton }) => {
             <div className={`w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold
               ${type === 'success' ? 'bg-green-100 text-green-600' :
                 type === 'error' ? 'bg-red-100 text-red-600' :
-                type === 'info' ? 'bg-blue-100 text-blue-600' :
-                'bg-gray-100 text-gray-600'
+                type === 'info' ? 'bg-orange-100 text-orange-600' :
+                'bg-orange-100 text-orange-600'
               }`}>
               {type === 'success' && '✓'}
               {type === 'error' && '✕'}
@@ -61,7 +61,7 @@ const ProjectToast = ({ message, type, isVisible, onHide, actionButton }) => {
             <p className="text-sm font-medium leading-tight">{message}</p>
             {/* Gestalt: Proximity - Action button close to related message */}
             {actionButton && (
-              <div className="mt-3 pt-3 border-t border-gray-200">
+              <div className="mt-3 pt-3 border-t border-orange-200">
                 {actionButton}
               </div>
             )}
@@ -69,7 +69,7 @@ const ProjectToast = ({ message, type, isVisible, onHide, actionButton }) => {
           {/* Gestalt: Closure - X button implies clickable close action */}
           <button 
             onClick={onHide} 
-            className="flex-shrink-0 w-6 h-6 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 transition-colors duration-200"
+            className="flex-shrink-0 w-6 h-6 rounded-full hover:bg-orange-100 flex items-center justify-center text-gray-400 hover:text-orange-600 transition-colors duration-200"
           >
             ✕
           </button>
@@ -94,23 +94,11 @@ const SmartActionRecommendations = ({ project, userEngagement, onAction }) => {
         icon: '❤️'
       });
     }
-    
-    if (userEngagement.hasLiked && !userEngagement.hasJoined) {
-      recommendations.push({
-        id: 'join_project',
-        title: 'Ready to Collaborate?',
-        description: 'Join the team and start contributing',
-        action: 'Join Project',
-        priority: 'high',
-        icon: '🤝'
-      });
-    }
-    
-    if (!userEngagement.hasShared) {
+      if (!userEngagement.hasShared) {
       recommendations.push({
         id: 'share_project',
         title: 'Spread the Word',
-        description: 'Help this project reach more collaborators',
+        description: 'Help this idea reach more creators',
         action: 'Share Project',
         priority: 'medium',
         icon: '📤'
@@ -121,14 +109,13 @@ const SmartActionRecommendations = ({ project, userEngagement, onAction }) => {
   };
 
   const recommendations = getRecommendations();
-
   return (
     /* Gestalt: Common Regions - Clear container grouping related actions */
-    <div className="bg-gradient-to-r from-indigo-50 via-white to-purple-50 rounded-3xl p-8 border-2 border-indigo-100 shadow-lg hover:shadow-xl transition-all duration-300">
+    <div className="bg-gradient-to-r from-yellow-50 via-orange-50 to-pink-50 rounded-3xl p-8 border-2 border-orange-200 shadow-lg hover:shadow-xl transition-all duration-300">
       {/* Gestalt: Proximity - Title and icon closely grouped */}
       <div className="flex items-center space-x-3 mb-6">
-        <div className="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-          <span className="text-indigo-600 text-lg">💡</span>
+        <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+          <span className="text-orange-600 text-lg">💡</span>
         </div>
         <h3 className="text-xl font-bold text-gray-900">Recommended Actions</h3>
       </div>
@@ -137,11 +124,11 @@ const SmartActionRecommendations = ({ project, userEngagement, onAction }) => {
       <div className="grid gap-4">
         {recommendations.map((rec) => (
           /* Gestalt: Uniform Connectedness - Related elements visually connected with consistent styling */
-          <div key={rec.id} className="group bg-white rounded-2xl p-5 border-2 border-gray-100 hover:border-indigo-200 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
+          <div key={rec.id} className="group bg-white rounded-2xl p-5 border-2 border-orange-100 hover:border-orange-300 hover:shadow-md transition-all duration-300 transform hover:-translate-y-1">
             <div className="flex items-center justify-between">
               {/* Gestalt: Proximity - Icon, title, and description grouped together */}
               <div className="flex items-start space-x-4 flex-1">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-300">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-100 to-pink-100 flex items-center justify-center text-xl group-hover:scale-110 transition-transform duration-300">
                   {rec.icon}
                 </div>
                 <div className="flex-1">
@@ -154,8 +141,8 @@ const SmartActionRecommendations = ({ project, userEngagement, onAction }) => {
                 onClick={() => onAction(rec.id, rec.action)}
                 className={`px-6 py-3 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 shadow-sm hover:shadow-md ${
                   rec.priority === 'high' 
-                    ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white hover:from-indigo-700 hover:to-purple-700' 
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white hover:from-orange-600 hover:to-red-700' 
+                    : 'bg-orange-100 text-orange-700 hover:bg-orange-200'
                 }`}
               >
                 {rec.action}
@@ -182,12 +169,11 @@ const SmartActionRecommendations = ({ project, userEngagement, onAction }) => {
  * - Continuation: Progress bar creates visual flow
  * - Closure: Rounded corners suggest completion and enclosure
  */
-const LiveEngagementMetrics = ({ project, userEngagement }) => {
-  const [metrics, setMetrics] = useState({
+const LiveEngagementMetrics = ({ project, userEngagement }) => {  const [metrics, setMetrics] = useState({
     views: project.views || 1247,
     likes: project.likes || 89,
-    collaboratorInterest: 23,
-    teamProgress: 45
+    inspirationCount: 23,
+    shareCount: 45
   });
 
   const [showAnimation, setShowAnimation] = useState(false);
@@ -210,17 +196,16 @@ const LiveEngagementMetrics = ({ project, userEngagement }) => {
       {/* Gestalt: Symmetry & Order - Balanced 2x2 grid layout */}
       {/* Gestalt: Parallelism - Consistent structure across all metric cards */}
       <div className="grid grid-cols-2 gap-4 mb-6">
-        
-        {/* Views Metric Card */}
-        <div className={`relative group text-center p-4 rounded-xl bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-200 transition-all duration-300 hover:shadow-md transform hover:scale-105 ${
-          showAnimation ? 'animate-pulse bg-blue-100' : ''
+          {/* Views Metric Card */}
+        <div className={`relative group text-center p-4 rounded-xl bg-gradient-to-br from-yellow-50 to-orange-50 border border-orange-200 transition-all duration-300 hover:shadow-md transform hover:scale-105 ${
+          showAnimation ? 'animate-pulse bg-orange-100' : ''
         }`}>
           {/* Gestalt: Figure/Ground - Strong contrast for readability */}
-          <div className="text-2xl font-bold text-blue-700 mb-1">{metrics.views.toLocaleString()}</div>
-          <div className="text-sm font-medium text-blue-600">Total Views</div>
+          <div className="text-2xl font-bold text-orange-700 mb-1">{metrics.views.toLocaleString()}</div>
+          <div className="text-sm font-medium text-orange-600">Total Views</div>
           {/* Gestalt: Emergence - Clear trending indicator shape */}
           {metrics.views > 1000 && (
-            <div className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md animate-pulse">
+            <div className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md animate-pulse">
               🔥 HOT
             </div>
           )}
@@ -237,56 +222,17 @@ const LiveEngagementMetrics = ({ project, userEngagement }) => {
             </div>
           )}
         </div>
-        
-        {/* Interest Metric Card */}
-        <div className="relative group text-center p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 transition-all duration-300 hover:shadow-md transform hover:scale-105">
-          <div className="text-2xl font-bold text-green-600 mb-1">{metrics.collaboratorInterest}</div>
-          <div className="text-sm font-medium text-green-500">Interested</div>
-          <div className="text-xs text-green-400 mt-1">🤝 Potential team</div>
+          {/* Interest Metric Card */}
+        <div className="relative group text-center p-4 rounded-xl bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 transition-all duration-300 hover:shadow-md transform hover:scale-105">          <div className="text-2xl font-bold text-green-600 mb-1">{metrics.inspirationCount}</div>
+          <div className="text-sm font-medium text-green-500">Inspired</div>
+          <div className="text-xs text-green-400 mt-1">💡 Sparked creativity</div>
         </div>
-        
-        {/* Team Progress Metric Card */}
-        <div className="relative group text-center p-4 rounded-xl bg-gradient-to-br from-purple-50 to-violet-50 border border-purple-200 transition-all duration-300 hover:shadow-md transform hover:scale-105">
-          <div className="text-2xl font-bold text-purple-600 mb-1">{metrics.teamProgress}%</div>
-          <div className="text-sm font-medium text-purple-500">Team Formed</div>
-          <div className="text-xs text-purple-400 mt-1">👥 Ready to build</div>
-        </div>
-      </div>
-      
-      {/* Gestalt: Continuation - Progress bar creates visual flow */}
-      {/* Gestalt: Closure - Rounded progress bar implies completion */}
-      <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-        <div className="flex items-center justify-between text-sm font-medium text-gray-700 mb-3">
-          <span className="flex items-center">
-            <span className="text-purple-600 mr-2">⚡</span>
-            Team Formation Progress
-          </span>
-          <span className="text-purple-600 font-bold">{metrics.teamProgress}% Complete</span>
-        </div>
-        
-        {/* Gestalt: Figure/Ground - Clear progress visualization */}
-        <div className="relative w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-          <div 
-            className="absolute left-0 top-0 h-full bg-gradient-to-r from-indigo-500 via-purple-500 to-purple-600 rounded-full transition-all duration-700 ease-out"
-            style={{ width: `${metrics.teamProgress}%` }}
-          >
-            {/* Gestalt: Common Fate - Animated progress indicator */}
-            <div className="absolute inset-0 bg-white bg-opacity-20 animate-pulse rounded-full"></div>
-          </div>
-        </div>
-        
-        {/* Gestalt: Proximity - Related information grouped together */}
-        <div className="flex items-center justify-between mt-3 text-xs">
-          <span className="text-gray-500 flex items-center">
-            <span className="text-blue-500 mr-1">👥</span>
-            2 more collaborators needed
-          </span>
-          <span className="text-green-600 font-medium flex items-center">
-            <span className="mr-1">🚀</span>
-            Ready for development
-          </span>
-        </div>
-      </div>
+          {/* Share Count Metric Card */}
+        <div className="relative group text-center p-4 rounded-xl bg-gradient-to-br from-pink-50 to-red-50 border border-pink-200 transition-all duration-300 hover:shadow-md transform hover:scale-105">
+          <div className="text-2xl font-bold text-pink-600 mb-1">{metrics.shareCount}</div>
+          <div className="text-sm font-medium text-pink-500">Shares</div>
+          <div className="text-xs text-pink-400 mt-1">📤 Spreading ideas</div>
+        </div>      </div>
     </div>
   );
 };
@@ -304,11 +250,9 @@ const ProjectDetails = ({ projectIdeas }) => {
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('success');
   const [toastActionButton, setToastActionButton] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [userEngagement, setUserEngagement] = useState({
+  const [isLoading, setIsLoading] = useState(false);  const [userEngagement, setUserEngagement] = useState({
     hasInteracted: false,
     hasLiked: false,
-    hasJoined: false,
     hasShared: false,
     hasSaved: false
   });
@@ -323,52 +267,25 @@ const ProjectDetails = ({ projectIdeas }) => {
       switch (actionId) {
         case 'start_engagement':
         case 'like_project':
-          if (!userEngagement.hasLiked) {
-            setUserEngagement(prev => ({ 
+          if (!userEngagement.hasLiked) {            setUserEngagement(prev => ({ 
               ...prev, 
               hasLiked: true, 
               hasInteracted: true 
             }));
-            setToastMessage('Project liked! You\'ll get updates on progress.');
+            setToastMessage('Project liked! You\'ll get updates on new similar ideas.');
             setToastType('success');
-            setToastActionButton(
-              <button 
-                onClick={() => handleSmartAction('join_project', 'Join Project')}
-                className="text-xs bg-white text-green-600 px-2 py-1 rounded hover:bg-gray-100"
-              >
-                Join Team
-              </button>
-            );
           } else {
             setToastMessage('You\'ve already liked this project!');
             setToastType('info');
           }
           break;
-          
-        case 'join_project':
-          if (!userEngagement.hasJoined) {
-            setUserEngagement(prev => ({ ...prev, hasJoined: true }));
-            setToastMessage('Welcome to the team! Check your email for next steps.');
-            setToastType('success');
-            setToastActionButton(
-              <button 
-                onClick={() => navigate('/my-projects')}
-                className="text-xs bg-white text-green-600 px-2 py-1 rounded hover:bg-gray-100"
-              >
-                View My Projects
-              </button>
-            );
-          } else {
-            setToastMessage('You\'re already part of this team!');
-            setToastType('info');
-          }
-          break;
+    
           
         case 'share_project':
           if (!userEngagement.hasShared) {
             await navigator.clipboard?.writeText(`Check out this amazing project: ${project.title} - ${window.location.href}`);
             setUserEngagement(prev => ({ ...prev, hasShared: true }));
-            setToastMessage('Project link copied! Share it with potential collaborators.');
+            setToastMessage('Project link copied! Share it with other creators and builders.');
             setToastType('success');
           } else {
             setToastMessage('Thanks for sharing! Link copied again.');
@@ -400,9 +317,8 @@ const ProjectDetails = ({ projectIdeas }) => {
     }
   };
 
-  if (!project) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+  if (!project) {    return (
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50 flex items-center justify-center">
         <div className="text-center bg-white rounded-2xl shadow-xl p-8 max-w-md">
           <div className="text-6xl mb-4">🚫</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-4">Project Not Found</h2>
@@ -410,13 +326,13 @@ const ProjectDetails = ({ projectIdeas }) => {
           <div className="space-y-3">
             <button 
               onClick={() => navigate('/browse')}
-              className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-all duration-300 transform hover:scale-105"
+              className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-3 rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105"
             >
               Browse Other Projects
             </button>
             <button 
               onClick={() => navigate('/')}
-              className="w-full border border-gray-300 text-gray-700 px-6 py-3 rounded-lg hover:bg-gray-50 transition-all duration-300"
+              className="w-full border border-orange-300 text-orange-700 px-6 py-3 rounded-lg hover:bg-orange-50 transition-all duration-300"
             >
               Back to Home
             </button>
@@ -424,8 +340,7 @@ const ProjectDetails = ({ projectIdeas }) => {
         </div>
       </div>
     );
-  }
-  // Enhanced project data with metadata
+  }  // Enhanced project data with metadata
   const projectMetadata = {
     datePosted: "2025-05-20",
     author: "Alex Johnson",
@@ -433,12 +348,10 @@ const ProjectDetails = ({ projectIdeas }) => {
     category: "Technology",
     difficulty: "Intermediate",
     estimatedTime: "3-6 months",
-    budget: "$5,000 - $15,000",
     techStack: ["React", "Node.js", "MongoDB", "IoT Sensors"],
-    collaboratorsNeeded: 3,
     views: 1247,
     likes: 89,
-    status: "Open for Collaboration"
+    status: "Open for Inspiration"
   };
 
   // Enhanced message handler with better feedback
@@ -474,9 +387,8 @@ const ProjectDetails = ({ projectIdeas }) => {
     } finally {
       setIsLoading(false);
     }
-  };
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  };  return (
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 via-orange-50 to-pink-50">
       {/* Enhanced Feedback Toast */}
       <ProjectToast
         message={toastMessage}
@@ -490,12 +402,12 @@ const ProjectDetails = ({ projectIdeas }) => {
       />
 
       {/* Enhanced Back Navigation with Context */}
-      <div className="bg-white shadow-sm border-b border-gray-200">
+      <div className="bg-white shadow-sm border-b border-orange-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <button 
               onClick={() => navigate('/')}
-              className="flex items-center text-indigo-600 hover:text-indigo-800 transition-all duration-300 transform hover:scale-105"
+              className="flex items-center text-orange-600 hover:text-orange-800 transition-all duration-300 transform hover:scale-105"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
@@ -515,8 +427,7 @@ const ProjectDetails = ({ projectIdeas }) => {
               </svg>
               <span className="text-gray-900 font-medium">{project.title}</span>
             </div>
-            
-            {/* Quick Action Buttons */}
+              {/* Quick Action Buttons */}
             <div className="flex items-center space-x-2">
               <button 
                 onClick={() => handleSmartAction('like_project', 'Like Project')}
@@ -537,8 +448,8 @@ const ProjectDetails = ({ projectIdeas }) => {
                 disabled={isLoading}
                 className={`p-2 rounded-full transition-all duration-300 transform hover:scale-110 ${
                   userEngagement.hasSaved 
-                    ? 'text-blue-600 bg-blue-50' 
-                    : 'text-gray-400 hover:text-blue-600 hover:bg-blue-50'
+                    ? 'text-orange-600 bg-orange-50' 
+                    : 'text-gray-400 hover:text-orange-600 hover:bg-orange-50'
                 } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 title={userEngagement.hasSaved ? 'Already saved' : 'Save this project'}
               >
@@ -549,7 +460,7 @@ const ProjectDetails = ({ projectIdeas }) => {
               <button 
                 onClick={() => handleSmartAction('share_project', 'Share Project')}
                 disabled={isLoading}
-                className="p-2 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-full transition-all duration-300 transform hover:scale-110"
+                className="p-2 text-gray-400 hover:text-pink-600 hover:bg-pink-50 rounded-full transition-all duration-300 transform hover:scale-110"
                 title="Share this project"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -578,9 +489,8 @@ const ProjectDetails = ({ projectIdeas }) => {
             <div className="bg-white rounded-xl shadow-lg p-8 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
               <div className="flex items-start justify-between mb-6">
                 <div className="flex-1">
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold ${
-                      projectMetadata.status === 'Open for Collaboration' 
+                  <div className="flex items-center gap-3 mb-4">                    <span className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-bold ${
+                      projectMetadata.status === 'Open for Inspiration' 
                         ? 'bg-green-100 text-green-800 border border-green-300' 
                         : 'bg-gray-100 text-gray-800 border border-gray-300'
                     }`}>
@@ -590,22 +500,15 @@ const ProjectDetails = ({ projectIdeas }) => {
                     {projectMetadata.likes > 50 && (
                       <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-orange-100 text-orange-800 border border-orange-300 animate-pulse">
                         🔥 TRENDING
-                      </span>
-                    )}
-                    {userEngagement.hasJoined && (
-                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-300">
-                        👥 TEAM MEMBER
-                      </span>
-                    )}
+                      </span>                    )}
                   </div>
                   <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">{project.title}</h1>
-                  <div className="flex items-center space-x-4 text-sm text-gray-600">
-                    <div className="flex items-center">
-                      <span className="w-8 h-8 bg-indigo-500 rounded-full flex items-center justify-center text-white font-bold text-sm mr-2">
-                        AJ
-                      </span>
-                      <span className="font-medium">By {projectMetadata.author}</span>
-                    </div>
+                  <div className="flex items-center space-x-4 text-sm text-gray-600">                  <div className="flex items-center">
+                    <span className="w-8 h-8 bg-gradient-to-r from-orange-500 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-sm mr-2">
+                      AJ
+                    </span>
+                    <span className="font-medium">By {projectMetadata.author}</span>
+                  </div>
                     <span>•</span>
                     <span>{projectMetadata.datePosted}</span>
                     <span>•</span>
@@ -615,21 +518,15 @@ const ProjectDetails = ({ projectIdeas }) => {
                   </div>
                 </div>
                 <div className="text-6xl animate-bounce">💡</div>
-              </div>
-
-              {/* Enhanced Category Tags with Interactivity */}
+              </div>              {/* Enhanced Category Tags with Interactivity */}
               <div className="flex flex-wrap gap-3 mb-6">
-                <span className="px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold border border-blue-300 hover:bg-blue-200 transition-all duration-300 cursor-pointer">
+                <span className="px-4 py-2 bg-orange-100 text-orange-800 rounded-full text-sm font-semibold border border-orange-300 hover:bg-orange-200 transition-all duration-300 cursor-pointer">
                   {projectMetadata.category}
                 </span>
                 <span className="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold border border-yellow-300 hover:bg-yellow-200 transition-all duration-300 cursor-pointer">
                   {projectMetadata.difficulty}
-                </span>
-                <span className="px-4 py-2 bg-purple-100 text-purple-800 rounded-full text-sm font-semibold border border-purple-300 hover:bg-purple-200 transition-all duration-300 cursor-pointer">
+                </span>                <span className="px-4 py-2 bg-pink-100 text-pink-800 rounded-full text-sm font-semibold border border-pink-300 hover:bg-pink-200 transition-all duration-300 cursor-pointer">
                   {projectMetadata.estimatedTime}
-                </span>
-                <span className="px-4 py-2 bg-green-100 text-green-800 rounded-full text-sm font-semibold border border-green-300 hover:bg-green-200 transition-all duration-300 cursor-pointer">
-                  {projectMetadata.budget}
                 </span>
               </div>
             </div>
@@ -658,9 +555,7 @@ const ProjectDetails = ({ projectIdeas }) => {
                   </div>
                 ))}
               </div>
-            </div>
-
-            {/* Timeline */}
+            </div>            {/* Timeline */}
             <div className="bg-white rounded-xl shadow-lg p-8">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Project Timeline</h2>
               <div className="space-y-4">
@@ -672,7 +567,7 @@ const ProjectDetails = ({ projectIdeas }) => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                  <div className="w-4 h-4 bg-orange-500 rounded-full"></div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Phase 2: Hardware Development</h4>
                     <p className="text-sm text-gray-600">Duration: 8-12 weeks</p>
@@ -686,7 +581,7 @@ const ProjectDetails = ({ projectIdeas }) => {
                   </div>
                 </div>
                 <div className="flex items-center space-x-4">
-                  <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
+                  <div className="w-4 h-4 bg-pink-500 rounded-full"></div>
                   <div>
                     <h4 className="font-semibold text-gray-900">Phase 4: Testing & Launch</h4>
                     <p className="text-sm text-gray-600">Duration: 3-4 weeks</p>
@@ -702,29 +597,24 @@ const ProjectDetails = ({ projectIdeas }) => {
                 project={project} 
                 userEngagement={userEngagement} 
               />
-            </div>
-
-            {/* Enhanced Project Metadata */}
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
+            </div>            {/* Enhanced Project Metadata */}
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-orange-200 hover:shadow-xl transition-all duration-300">
               <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
-                <span className="text-indigo-600 mr-2">📋</span>
+                <span className="text-orange-600 mr-2">📋</span>
                 Project Details
-              </h3>
-              <div className="space-y-6">
-                <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg border border-green-200">
-                  <span className="text-sm font-medium text-gray-600">Budget Range</span>
-                  <p className="text-lg font-bold text-green-800">{projectMetadata.budget}</p>
-                  <p className="text-xs text-green-600 mt-1">💰 Well-funded project</p>
+              </h3>              <div className="space-y-6">                <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
+                  <span className="text-sm font-medium text-gray-600">Project Type</span>
+                  <p className="text-lg font-bold text-blue-800">Open Source</p>
+                  <p className="text-xs text-blue-600 mt-1">💡 Share ideas and learn together</p>
+                </div><div className="p-4 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-lg border border-orange-200">
+                  <span className="text-sm font-medium text-gray-600">Inspiration Level</span>
+                  <p className="text-lg font-bold text-orange-800">Open for All</p>
+                  <p className="text-xs text-orange-600 mt-1">💡 Share and build upon this idea</p>
                 </div>
-                <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200">
-                  <span className="text-sm font-medium text-gray-600">Collaborators Needed</span>
-                  <p className="text-lg font-bold text-blue-800">{projectMetadata.collaboratorsNeeded} people</p>
-                  <p className="text-xs text-blue-600 mt-1">🤝 Active team formation</p>
-                </div>
-                <div className="p-4 bg-gradient-to-r from-purple-50 to-violet-50 rounded-lg border border-purple-200">
+                <div className="p-4 bg-gradient-to-r from-pink-50 to-red-50 rounded-lg border border-pink-200">
                   <span className="text-sm font-medium text-gray-600">Timeline</span>
-                  <p className="text-lg font-bold text-purple-800">{projectMetadata.estimatedTime}</p>
-                  <p className="text-xs text-purple-600 mt-1">⏱️ Realistic timeline</p>
+                  <p className="text-lg font-bold text-pink-800">{projectMetadata.estimatedTime}</p>
+                  <p className="text-xs text-pink-600 mt-1">⏱️ Realistic timeline</p>
                 </div>
                 <div className="p-4 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-lg border border-yellow-200">
                   <span className="text-sm font-medium text-gray-600">Difficulty Level</span>
@@ -733,13 +623,13 @@ const ProjectDetails = ({ projectIdeas }) => {
                 </div>
               </div>
             </div>            {/* Enhanced Author Info */}
-            <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-gray-200 hover:shadow-xl transition-all duration-300">
+            <div className="bg-white rounded-xl shadow-lg p-6 mb-8 border border-orange-200 hover:shadow-xl transition-all duration-300">
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <span className="text-indigo-600 mr-2">👤</span>
+                <span className="text-orange-600 mr-2">👤</span>
                 Project Owner
               </h3>
               <div className="flex items-center space-x-4 mb-4">
-                <div className="w-16 h-16 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                <div className="w-16 h-16 bg-gradient-to-r from-orange-500 to-red-600 rounded-full flex items-center justify-center shadow-lg">
                   <span className="text-white font-bold text-xl">AJ</span>
                 </div>
                 <div>
@@ -758,20 +648,20 @@ const ProjectDetails = ({ projectIdeas }) => {
               
               {/* Author Stats */}
               <div className="grid grid-cols-2 gap-4 mb-4">
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
-                  <div className="text-lg font-bold text-gray-900">12</div>
-                  <div className="text-xs text-gray-600">Projects</div>
+                <div className="text-center p-3 bg-orange-50 rounded-lg">
+                  <div className="text-lg font-bold text-orange-900">12</div>
+                  <div className="text-xs text-orange-600">Projects</div>
                 </div>
-                <div className="text-center p-3 bg-gray-50 rounded-lg">
+                <div className="text-center p-3 bg-orange-50 rounded-lg">
                   <div className="text-lg font-bold text-green-600">94%</div>
-                  <div className="text-xs text-gray-600">Success Rate</div>
+                  <div className="text-xs text-orange-600">Success Rate</div>
                 </div>
               </div>
               
               <button 
                 onClick={() => setShowMessageForm(true)}
                 disabled={isLoading}
-                className={`w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-medium ${
+                className={`w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 px-4 rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-medium ${
                   isLoading ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               >
@@ -787,44 +677,19 @@ const ProjectDetails = ({ projectIdeas }) => {
                   </>
                 )}
               </button>
-            </div>
-
-            {/* Enhanced Quick Actions */}
-            <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
+            </div>            {/* Enhanced Quick Actions */}
+            <div className="bg-white rounded-xl shadow-lg p-6 border border-orange-200 hover:shadow-xl transition-all duration-300">
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <span className="text-indigo-600 mr-2">⚡</span>
+                <span className="text-orange-600 mr-2">⚡</span>
                 Quick Actions
-              </h3>
-              <div className="space-y-3">
-                <button 
-                  onClick={() => handleSmartAction('join_project', 'Join Project')}
-                  disabled={isLoading || userEngagement.hasJoined}
-                  className={`w-full py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 font-medium ${
-                    userEngagement.hasJoined
-                      ? 'bg-green-100 text-green-800 border border-green-300 cursor-not-allowed'
-                      : 'bg-green-600 text-white hover:bg-green-700 shadow-lg hover:shadow-xl'
-                  } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  {userEngagement.hasJoined ? (
-                    <>
-                      <span className="mr-2">✅</span>
-                      Already Joined
-                    </>
-                  ) : (
-                    <>
-                      <span className="mr-2">🤝</span>
-                      Join Project Team
-                    </>
-                  )}
-                </button>
-                
+              </h3>              <div className="space-y-3">
                 <button 
                   onClick={() => handleSmartAction('save_project', 'Save Project')}
                   disabled={isLoading}
                   className={`w-full py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 font-medium ${
                     userEngagement.hasSaved
-                      ? 'bg-blue-100 text-blue-800 border border-blue-300'
-                      : 'border border-indigo-600 text-indigo-600 hover:bg-indigo-50'
+                      ? 'bg-orange-100 text-orange-800 border border-orange-300'
+                      : 'border border-orange-600 text-orange-600 hover:bg-orange-50'
                   } ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   {userEngagement.hasSaved ? (
@@ -843,14 +708,14 @@ const ProjectDetails = ({ projectIdeas }) => {
                 <button 
                   onClick={() => handleSmartAction('share_project', 'Share Project')}
                   disabled={isLoading}
-                  className="w-full border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition-all duration-300 transform hover:scale-105 font-medium"
+                  className="w-full border border-orange-300 text-orange-700 py-3 px-4 rounded-lg hover:bg-orange-50 transition-all duration-300 transform hover:scale-105 font-medium"
                 >
                   <span className="mr-2">📤</span>
                   Share Project
                 </button>
                 
-                <div className="pt-2 border-t border-gray-200">
-                  <button className="w-full text-gray-500 text-sm py-2 hover:text-gray-700 transition-colors duration-300">
+                <div className="pt-2 border-t border-orange-200">
+                  <button className="w-full text-gray-500 text-sm py-2 hover:text-orange-700 transition-colors duration-300">
                     <span className="mr-2">🚨</span>
                     Report Project
                   </button>
@@ -878,14 +743,13 @@ const ProjectDetails = ({ projectIdeas }) => {
               </button>
             </div>
             
-            <form onSubmit={handleSendMessage} className="space-y-4">
-              <div>
+            <form onSubmit={handleSendMessage} className="space-y-4">              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Your Name *</label>
                 <input
                   type="text"
                   value={senderName}
                   onChange={(e) => setSenderName(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                  className="w-full border border-orange-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300"
                   placeholder="Enter your full name"
                   required
                 />
@@ -897,7 +761,7 @@ const ProjectDetails = ({ projectIdeas }) => {
                   type="email"
                   value={senderEmail}
                   onChange={(e) => setSenderEmail(e.target.value)}
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300"
+                  className="w-full border border-orange-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300"
                   placeholder="your.email@example.com"
                   required
                 />
@@ -909,8 +773,8 @@ const ProjectDetails = ({ projectIdeas }) => {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   rows="4"
-                  className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all duration-300 resize-none"
-                  placeholder="Hi! I'm interested in collaborating on your project..."
+                  className="w-full border border-orange-300 rounded-lg px-4 py-3 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300 resize-none"
+                  placeholder="Hi! I'm interested in learning more about your project idea..."
                   required
                 />
                 <div className="mt-2 text-xs text-gray-500">
@@ -919,20 +783,19 @@ const ProjectDetails = ({ projectIdeas }) => {
               </div>
               
               {/* Message Templates */}
-              <div className="p-4 bg-gray-50 rounded-lg">
+              <div className="p-4 bg-orange-50 rounded-lg">
                 <p className="text-sm font-medium text-gray-700 mb-2">Quick Templates:</p>
-                <div className="space-y-2">
-                  <button
+                <div className="space-y-2">                  <button
                     type="button"
-                    onClick={() => setMessage("Hi! I'm interested in joining your project team. I have experience in full-stack development and would love to contribute.")}
-                    className="text-xs text-indigo-600 hover:text-indigo-800 transition-colors duration-300"
+                    onClick={() => setMessage("Hi! This idea really inspired me. I'd love to learn more about your vision and potentially build something similar.")}
+                    className="text-xs text-orange-600 hover:text-orange-800 transition-colors duration-300"
                   >
-                    • Interest in joining
+                    • Express inspiration
                   </button>
                   <button
                     type="button"
                     onClick={() => setMessage("Hello! I'd like to learn more about the technical requirements and timeline for this project.")}
-                    className="text-xs text-indigo-600 hover:text-indigo-800 transition-colors duration-300 block"
+                    className="text-xs text-orange-600 hover:text-orange-800 transition-colors duration-300 block"
                   >
                     • Request more details
                   </button>
@@ -943,14 +806,14 @@ const ProjectDetails = ({ projectIdeas }) => {
                 <button
                   type="button"
                   onClick={() => setShowMessageForm(false)}
-                  className="flex-1 border border-gray-300 text-gray-700 py-3 px-4 rounded-lg hover:bg-gray-50 transition-all duration-300 font-medium"
+                  className="flex-1 border border-orange-300 text-orange-700 py-3 px-4 rounded-lg hover:bg-orange-50 transition-all duration-300 font-medium"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className={`flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-medium ${
+                  className={`flex-1 bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 px-4 rounded-lg hover:from-orange-600 hover:to-red-700 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl font-medium ${
                     isLoading ? 'opacity-50 cursor-not-allowed' : ''
                   }`}
                 >
