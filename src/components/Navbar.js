@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
+import { User, Settings, LogOut } from 'lucide-react';
 
 /**
  * SIMPLIFIED USER GUIDANCE & FEEDBACK OPTIMIZATION FOR NAVBAR:
@@ -23,10 +25,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isAuthenticated, logout, isLoading } = useAuth();  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  
-  const isActive = (path) => location.pathname === path;
+    const isActive = (path) => location.pathname === path;
 
   // Simplified navigation handler
   const handleNavigation = async (path) => {
@@ -40,6 +41,12 @@ const Navbar = () => {
       navigate(path);
       setIsNavigating(false);
     }, 100);
+  };
+
+  // Handle logout
+  const handleLogout = () => {
+    logout();
+    handleNavigation('/');
   };
 
   // Clean navigation items
@@ -101,26 +108,68 @@ const Navbar = () => {
                 <span className="mr-2">{item.icon}</span>
                 {item.label}
               </button>
-            ))}            {/* Auth Buttons */}
+            ))}            {/* Auth Section */}
             <div className="flex items-center space-x-2 ml-6 pl-6 border-l border-orange-400/30">
-              <button
-                onClick={() => handleNavigation('/auth?mode=login')}
-                disabled={isNavigating}
-                className={`text-orange-700 hover:text-orange-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 backdrop-blur-sm border border-transparent hover:border-orange-400/20 ${
-                  isNavigating ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                Sign In
-              </button>
-              <button 
-                onClick={() => handleNavigation('/auth?mode=signup')}
-                disabled={isNavigating}
-                className={`bg-gradient-to-r from-orange-500 to-red-600 text-white hover:from-orange-400 hover:to-red-500 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-orange-500/25 transform hover:scale-105 border border-orange-400/30 ${
-                  isNavigating ? 'opacity-50 cursor-not-allowed' : ''
-                }`}
-              >
-                Sign Up
-              </button>
+              {isAuthenticated ? (
+                /* User Profile Button - Direct Navigation to Account */
+                <>
+                  <button
+                    onClick={() => handleNavigation('/account')}
+                    disabled={isNavigating}
+                    className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 backdrop-blur-sm border border-transparent hover:border-orange-400/20 ${
+                      isNavigating ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    <div className="flex items-center space-x-2">
+                      {user?.profilePicture ? (
+                        <img 
+                          src={user.profilePicture} 
+                          alt={user.name}
+                          className="w-8 h-8 rounded-full object-cover border-2 border-orange-400/30"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-500 to-pink-600 flex items-center justify-center text-white text-sm font-semibold">
+                          {user?.name?.charAt(0).toUpperCase() || 'U'}
+                        </div>
+                      )}
+                      <span className="text-orange-700 hidden sm:block">{user?.name}</span>
+                    </div>
+                  </button>
+                  
+                  <button
+                    onClick={handleLogout}
+                    disabled={isNavigating}
+                    className={`text-red-600 hover:text-red-700 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-gradient-to-r hover:from-red-500/10 hover:to-pink-600/10 backdrop-blur-sm border border-transparent hover:border-red-400/20 ${
+                      isNavigating ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                    title="Sign Out"
+                  >
+                    <LogOut className="w-4 h-4" />
+                  </button>
+                </>
+              ) : (
+                /* Auth Buttons for Non-authenticated Users */
+                <>
+                  <button
+                    onClick={() => handleNavigation('/auth?mode=login')}
+                    disabled={isNavigating}
+                    className={`text-orange-700 hover:text-orange-800 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 backdrop-blur-sm border border-transparent hover:border-orange-400/20 ${
+                      isNavigating ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    Sign In
+                  </button>
+                  <button 
+                    onClick={() => handleNavigation('/auth?mode=signup')}
+                    disabled={isNavigating}
+                    className={`bg-gradient-to-r from-orange-500 to-red-600 text-white hover:from-orange-400 hover:to-red-500 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 shadow-lg hover:shadow-xl hover:shadow-orange-500/25 transform hover:scale-105 border border-orange-400/30 ${
+                      isNavigating ? 'opacity-50 cursor-not-allowed' : ''
+                    }`}
+                  >
+                    Sign Up
+                  </button>
+                </>
+              )}
             </div>
           </div>
 
@@ -167,20 +216,55 @@ const Navbar = () => {
                   <span className="font-medium">{item.label}</span>
                 </button>
               ))}
-              
-              {/* Auth Buttons */}
-              <div className="border-t border-orange-400/30 pt-4 space-y-3">                <button 
-                  onClick={() => handleNavigation('/auth?mode=signup')}
-                  className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-3 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:from-orange-400 hover:to-red-500 border border-orange-400/30"
-                >
-                  Sign Up
-                </button>
-                <button 
-                  onClick={() => handleNavigation('/auth?mode=login')}
-                  className="w-full text-orange-700 hover:text-orange-800 px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 border border-transparent hover:border-orange-400/20 backdrop-blur-sm"
-                >
-                  Sign In
-                </button>
+                {/* Auth Section for Mobile */}
+              <div className="border-t border-orange-400/30 pt-4 space-y-3">                {isAuthenticated ? (
+                  <>
+                    <button 
+                      onClick={() => handleNavigation('/account')}
+                      className="w-full px-4 py-3 bg-gradient-to-r from-orange-500/10 to-pink-600/10 rounded-lg border border-orange-400/20 transition-all duration-300 hover:from-orange-500/15 hover:to-pink-600/15"
+                    >
+                      <div className="flex items-center space-x-3">
+                        {user?.profilePicture ? (
+                          <img 
+                            src={user.profilePicture} 
+                            alt={user.name}
+                            className="w-10 h-10 rounded-full object-cover border-2 border-orange-400/30"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-pink-600 flex items-center justify-center text-white font-semibold">
+                            {user?.name?.charAt(0).toUpperCase() || 'U'}
+                          </div>
+                        )}
+                        <div className="text-left">
+                          <div className="font-semibold text-gray-800">{user?.name}</div>
+                          <div className="text-sm text-gray-600">{user?.email}</div>
+                        </div>
+                      </div>
+                    </button>
+                    <button 
+                      onClick={handleLogout}
+                      className="w-full text-left px-4 py-3 rounded-lg transition-all duration-300 flex items-center space-x-3 hover:bg-gradient-to-r hover:from-red-500/10 hover:to-pink-600/10 border border-transparent hover:border-red-400/20 text-red-600"
+                    >
+                      <LogOut className="w-5 h-5" />
+                      <span className="font-medium">Sign Out</span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button 
+                      onClick={() => handleNavigation('/auth?mode=signup')}
+                      className="w-full bg-gradient-to-r from-orange-500 to-red-600 text-white px-4 py-3 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:from-orange-400 hover:to-red-500 border border-orange-400/30"
+                    >
+                      Sign Up
+                    </button>
+                    <button 
+                      onClick={() => handleNavigation('/auth?mode=login')}
+                      className="w-full text-orange-700 hover:text-orange-800 px-4 py-3 rounded-lg font-medium transition-all duration-300 hover:bg-gradient-to-r hover:from-orange-500/10 hover:to-pink-600/10 border border-transparent hover:border-orange-400/20 backdrop-blur-sm"
+                    >
+                      Sign In
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           </div>

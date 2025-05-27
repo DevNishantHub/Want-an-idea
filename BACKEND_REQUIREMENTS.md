@@ -12,12 +12,14 @@ users {
     id: Long (Primary Key, Auto-generated)
     email: String (Unique, Not Null)
     password: String (Encrypted, Not Null)
-    firstName: String (Not Null)
-    lastName: String (Not Null)
+    name: String (Not Null) -- Combined full name from frontend
+    firstName: String (Optional) -- For advanced signup options
+    lastName: String (Optional) -- For advanced signup options
     profilePicture: String (URL/Path, Optional)
     role: Enum (USER, ADMIN, MODERATOR)
     isActive: Boolean (Default: true)
-    emailVerified: Boolean (Default: false)
+    isVerified: Boolean (Default: false) -- Matches frontend emailVerified
+    joinDate: Timestamp -- Matches frontend joinDate format
     createdAt: Timestamp
     updatedAt: Timestamp
     lastLoginAt: Timestamp
@@ -27,6 +29,12 @@ users {
     github: String (Optional)
     skills: Text (JSON Array of skills)
     contactPreference: Enum (EMAIL, PLATFORM_MESSAGES, NONE)
+    
+    -- User Preferences (JSON structure to match frontend)
+    preferences: Text (JSON) -- {emailNotifications, ideaRecommendations, weeklyDigest, profileVisibility}
+    
+    -- User Statistics (JSON structure to match frontend)
+    stats: Text (JSON) -- {ideasSubmitted, profileViews, inspirationCount, totalShares}
 }
 ```
 
@@ -186,12 +194,14 @@ project_stats {
 #### Auth Controller
 ```
 POST /api/auth/register
-- Request Body: { firstName, lastName, email, password, confirmPassword }
-- Response: { user, token, refreshToken }
+- Request Body: { email, password, confirmPassword, name?, firstName?, lastName?, fullName? }
+- Response: { user: { id, email, name, profilePicture?, joinDate, isVerified, preferences, stats }, token, refreshToken }
+- Notes: Frontend supports both simple (name/fullName) and advanced (firstName/lastName) signup flows
 
 POST /api/auth/login
 - Request Body: { email, password }
-- Response: { user, token, refreshToken }
+- Response: { user: { id, email, name, profilePicture?, joinDate, isVerified, preferences, stats }, token, refreshToken }
+- Notes: Response format matches frontend AuthContext user structure
 
 POST /api/auth/logout
 - Headers: Authorization Bearer token
@@ -219,27 +229,38 @@ POST /api/auth/resend-verification
 
 POST /api/auth/social/google
 - Request Body: { googleToken }
-- Response: { user, token, refreshToken }
+- Response: { user: { id, email, name, profilePicture?, joinDate, isVerified, preferences, stats }, token, refreshToken }
+- Notes: Creates user with default preferences and stats if new account
 
 POST /api/auth/social/github
 - Request Body: { githubCode }
-- Response: { user, token, refreshToken }
+- Response: { user: { id, email, name, profilePicture?, joinDate, isVerified, preferences, stats }, token, refreshToken }
+- Notes: Creates user with default preferences and stats if new account
 
 POST /api/auth/social/linkedin
 - Request Body: { linkedinCode }
-- Response: { user, token, refreshToken }
+- Response: { user: { id, email, name, profilePicture?, joinDate, isVerified, preferences, stats }, token, refreshToken }
+- Notes: Creates user with default preferences and stats if new account
 ```
 
 #### User Controller
 ```
 GET /api/users/profile
 - Headers: Authorization Bearer token
-- Response: User profile data
+- Response: Complete user profile data matching frontend AuthContext structure
+- Format: { id, email, name, profilePicture?, joinDate, isVerified, preferences, stats, bio?, website?, linkedin?, github?, skills?, contactPreference? }
 
 PUT /api/users/profile
 - Headers: Authorization Bearer token
-- Request Body: { firstName, lastName, bio, website, linkedin, github, skills, contactPreference }
-- Response: Updated user data
+- Request Body: { name?, firstName?, lastName?, bio?, website?, linkedin?, github?, skills?, contactPreference? }
+- Response: Updated user data in same format as GET /api/users/profile
+- Notes: Frontend shows direct account management page at /account route
+
+PUT /api/users/preferences
+- Headers: Authorization Bearer token
+- Request Body: { emailNotifications?, ideaRecommendations?, weeklyDigest?, profileVisibility? }
+- Response: Updated user preferences
+- Notes: Frontend preferences: emailNotifications, ideaRecommendations, weeklyDigest, profileVisibility
 
 POST /api/users/upload-avatar
 - Headers: Authorization Bearer token
@@ -247,11 +268,79 @@ POST /api/users/upload-avatar
 - Response: { profilePictureUrl }
 
 GET /api/users/{userId}/public-profile
-- Response: Public user profile data
+- Response: Public user profile data (respects profileVisibility preference)
 
 GET /api/users/me/stats
 - Headers: Authorization Bearer token
-- Response: { submissionsCount, likesReceived, viewsReceived, sharesReceived }
+- Response: { ideasSubmitted, profileViews, inspirationCount, totalShares }
+- Notes: Stats structure matches frontend user.stats object
+
+PUT /api/users/me/stats
+- Headers: Authorization Bearer token
+- Request Body: { ideasSubmitted?, profileViews?, inspirationCount?, totalShares? }
+- Response: Updated stats
+- Notes: Used for incrementing stats when user performs actions
+
+GET /api/users/me/account
+- Headers: Authorization Bearer token
+- Response: Complete account information for /account page
+- Format: Includes profile, preferences, stats, recent activity, and account settings
+```
+
+#### Default User Data Structures (Frontend Implementation Alignment)
+
+**Default User Preferences Structure:**
+```json
+{
+  "emailNotifications": true,
+  "ideaRecommendations": true, 
+  "weeklyDigest": true,
+  "profileVisibility": "public"
+}
+```
+
+**Default User Stats Structure:**
+```json
+{
+  "ideasSubmitted": 0,
+  "profileViews": 0,
+  "inspirationCount": 0,
+  "totalShares": 0
+}
+```
+
+**Authentication Response Format (matches frontend AuthContext):**
+```json
+{
+  "user": {
+    "id": 12345,
+    "email": "user@example.com",
+    "name": "John Doe",
+    "profilePicture": "https://example.com/avatar.jpg", // Optional
+    "joinDate": "2025-05-27T10:30:00.000Z",
+    "isVerified": false,
+    "preferences": {
+      "emailNotifications": true,
+      "ideaRecommendations": true,
+      "weeklyDigest": true,
+      "profileVisibility": "public"
+    },
+    "stats": {
+      "ideasSubmitted": 0,
+      "profileViews": 0,
+      "inspirationCount": 0,
+      "totalShares": 0
+    }
+  },
+  "token": "jwt-token-here",
+  "refreshToken": "refresh-token-here"
+}
+```
+
+**Frontend Navigation Notes:**
+- Authentication redirects to `/account` page (not a dropdown menu)
+- Direct account page navigation from navbar user profile button
+- No dropdown menu in navbar - users click profile button to go to account page
 ```
 
 ### 2. Project Ideas Management
@@ -834,3 +923,423 @@ GET /api/analytics/trending
 - Recovery point objectives (RPO)
 - Disaster recovery testing
 - Business continuity planning
+
+### 6. Password Security Requirements
+
+#### Password Validation Rules
+The backend must implement password strength validation matching the frontend requirements:
+
+```java
+@Component
+public class PasswordValidator {
+    public static final int MIN_LENGTH = 8;
+    public static final String SPECIAL_CHARACTERS = "!@#$%^&*(),.?\":{}|<>";
+    
+    public ValidationResult validatePassword(String password) {
+        List<String> errors = new ArrayList<>();
+        
+        if (password.length() < MIN_LENGTH) {
+            errors.add("Password must be at least 8 characters long");
+        }
+        
+        if (!password.matches(".*[a-z].*")) {
+            errors.add("Password must contain at least one lowercase letter");
+        }
+        
+        if (!password.matches(".*[A-Z].*")) {
+            errors.add("Password must contain at least one uppercase letter");
+        }
+        
+        if (!password.matches(".*[0-9].*")) {
+            errors.add("Password must contain at least one number");
+        }
+        
+        if (!password.matches(".*[" + Pattern.quote(SPECIAL_CHARACTERS) + "].*")) {
+            errors.add("Password must contain at least one special character");
+        }
+        
+        return new ValidationResult(errors.isEmpty(), errors);
+    }
+}
+```
+
+#### Password Security Features
+- Password hashing using BCrypt with appropriate cost factor (12+)
+- Password history tracking (prevent reuse of last 5 passwords)
+- Password expiration policies for admin accounts
+- Account lockout after failed login attempts
+- Password reset token expiration (15 minutes)
+
+#### Registration Password Requirements
+```json
+{
+  "password": {
+    "minLength": 8,
+    "requireLowercase": true,
+    "requireUppercase": true,
+    "requireNumbers": true,
+    "requireSpecialChars": true,
+    "specialChars": "!@#$%^&*(),.?\":{}|<>",
+    "maxLength": 128
+  }
+}
+```
+
+## Password Validation Requirements
+
+### Frontend Password Strength Requirements (Implementation Alignment)
+The backend must implement password validation that matches the frontend's 5-level strength indicator:
+
+**Level 1 (Weak):**
+- Minimum 8 characters
+
+**Level 2 (Fair):**
+- 8+ characters
+- Contains uppercase letter
+
+**Level 3 (Good):**
+- 8+ characters
+- Contains uppercase letter
+- Contains lowercase letter
+
+**Level 4 (Strong):**
+- 8+ characters
+- Contains uppercase letter
+- Contains lowercase letter
+- Contains number
+
+**Level 5 (Excellent):**
+- 8+ characters
+- Contains uppercase letter
+- Contains lowercase letter
+- Contains number
+- Contains special character
+
+**Backend Validation Rules:**
+```
+- Minimum password length: 8 characters
+- Must contain at least one uppercase letter (A-Z)
+- Must contain at least one lowercase letter (a-z)
+- Must contain at least one number (0-9)
+- Must contain at least one special character (!@#$%^&*()_+-=[]{}|;:,.<>?)
+- Cannot be common passwords (implement password blacklist)
+- Cannot contain user's email or name
+- Password confirmation must match during registration
+```
+
+**API Response Format for Password Validation:**
+```json
+{
+  "valid": false,
+  "strength": 2,
+  "feedback": "Add: number, special character",
+  "errors": [
+    "Password must contain at least one number",
+    "Password must contain at least one special character"
+  ]
+}
+```
+
+### 7. Social Authentication Integration
+
+#### Supported Providers
+Based on frontend implementation, support for:
+- Google OAuth 2.0
+- GitHub OAuth
+- LinkedIn OAuth (future implementation)
+
+#### Frontend Social Auth Flow Requirements
+```
+1. User clicks social auth button (Google/GitHub)
+2. Frontend initiates OAuth flow with provider
+3. Provider returns authorization code/token
+4. Frontend sends token/code to backend
+5. Backend validates with provider
+6. Backend creates/updates user account
+7. Backend returns user data in standard format
+8. Frontend receives user data and navigates to /account
+```
+
+#### Social Auth Response Format
+Must match standard authentication response format with user data structure:
+```json
+{
+  "user": {
+    "id": 12345,
+    "email": "user@provider.com",
+    "name": "John Doe",
+    "profilePicture": "https://provider.com/avatar.jpg",
+    "joinDate": "2025-05-27T10:30:00.000Z",
+    "isVerified": true,
+    "preferences": { /* default preferences */ },
+    "stats": { /* default stats */ }
+  },
+  "token": "jwt-token",
+  "refreshToken": "refresh-token"
+}
+```
+
+#### Social Provider Integration Requirements
+- Google: Validate Google ID token server-side
+- GitHub: Exchange authorization code for access token
+- LinkedIn: Exchange authorization code for access token
+- Extract profile information (name, email, profile picture)
+- Handle email conflicts (link accounts or error)
+- Create user with default preferences and stats if new
+- Update existing user profile picture if account exists
+```
+
+### 8. Account Management Features
+
+#### User Preferences Validation
+```java
+@Component
+public class UserPreferencesValidator {
+    public ValidationResult validatePreferences(UserPreferences preferences) {
+        List<String> errors = new ArrayList<>();
+        
+        // Email notifications - boolean
+        if (preferences.getEmailNotifications() == null) {
+            errors.add("Email notifications preference is required");
+        }
+        
+        // Idea recommendations - boolean
+        if (preferences.getIdeaRecommendations() == null) {
+            errors.add("Idea recommendations preference is required");
+        }
+        
+        // Weekly digest - boolean
+        if (preferences.getWeeklyDigest() == null) {
+            errors.add("Weekly digest preference is required");
+        }
+        
+        // Profile visibility - enum validation
+        if (preferences.getProfileVisibility() == null || 
+            !Arrays.asList("public", "private", "friends").contains(preferences.getProfileVisibility())) {
+            errors.add("Profile visibility must be one of: public, private, friends");
+        }
+        
+        return new ValidationResult(errors.isEmpty(), errors);
+    }
+}
+```
+
+#### User Statistics Update Logic
+```java
+@Service
+public class UserStatsService {
+    
+    public void incrementIdeasSubmitted(Long userId) {
+        // Increment when user submits a new idea
+        userRepository.incrementStat(userId, "ideasSubmitted", 1);
+    }
+    
+    public void incrementProfileViews(Long userId) {
+        // Increment when another user views the profile
+        userRepository.incrementStat(userId, "profileViews", 1);
+    }
+```
+
+### User Session Management & Persistence Requirements
+
+**Frontend Session Handling:**
+- Uses localStorage for authentication persistence
+- Maintains user session across browser refreshes
+- Automatic session restoration on app load
+- Session cleanup on logout
+
+**Backend Session Requirements:**
+```
+JWT Token Management:
+- Access token expiration: 1 hour
+- Refresh token expiration: 7 days
+- Automatic token refresh before expiration
+- Secure token storage recommendations for frontend
+- Token blacklisting on logout
+
+Session Validation:
+- Validate JWT signature and expiration
+- Check user account status (active, verified)
+- Track user activity and last login
+- Handle concurrent sessions (multiple devices)
+
+Logout Handling:
+- Invalidate current tokens
+- Clear session data
+- Update last logout timestamp
+- Optional: Clear all user sessions (logout everywhere)
+```
+
+**Authentication Middleware Requirements:**
+```
+Protected Route Handling:
+- Validate Authorization Bearer token
+- Extract user information from token
+- Check user permissions for requested resource
+- Handle expired tokens gracefully
+- Return appropriate error responses
+
+Token Refresh Flow:
+- Accept refresh token
+- Validate refresh token
+- Generate new access token
+- Optionally rotate refresh token
+- Return new tokens to frontend
+```
+
+### Account Management & Navigation Requirements
+
+**Frontend Navigation Pattern:**
+- Direct account access via navbar profile button (no dropdown menu)
+- Account page route: `/account` 
+- Authentication redirects to `/account` page after successful login/signup
+- Profile button in navbar navigates directly to account management page
+- Logout button in navbar (no dropdown menu structure)
+
+**Account Page Features Required:**
+- Complete user profile management
+- User preferences configuration
+- User statistics display
+- Account settings
+- Security settings (password change, email verification)
+- Profile picture upload/management
+- Account deletion option
+- Privacy settings
+
+**Backend Endpoints for Account Management:**
+```
+GET /api/users/me/account
+- Headers: Authorization Bearer token
+- Response: Complete account data for account page
+- Includes: profile, preferences, stats, security settings, privacy settings
+
+PUT /api/users/me/account/settings
+- Headers: Authorization Bearer token
+- Request Body: { accountSettings object }
+- Response: Updated account settings
+
+POST /api/users/me/account/delete
+- Headers: Authorization Bearer token
+- Request Body: { confirmationPassword, reason? }
+- Response: Account deletion confirmation
+
+GET /api/users/me/account/activity
+- Headers: Authorization Bearer token
+- Query Params: ?page=0&size=20
+- Response: Page<UserActivity> - Recent account activity
+
+PUT /api/users/me/security/password
+- Headers: Authorization Bearer token
+- Request Body: { currentPassword, newPassword, confirmPassword }
+- Response: Password change confirmation
+```
+
+### Form Validation & Error Handling Requirements
+
+**Registration Form Validation (Frontend Alignment):**
+```
+Email Validation:
+- Valid email format (RFC 5322 compliant)
+- Domain validation
+- Email uniqueness check
+- Email existence verification (optional)
+
+Name Field Validation:
+- Support both simple (fullName) and advanced (firstName/lastName) modes
+- Minimum 2 characters for names
+- Maximum 50 characters per name field
+- No special characters except hyphens and apostrophes
+- Trim whitespace
+
+Password Validation:
+- Implement 5-level strength validation (as detailed above)
+- Real-time validation feedback
+- Password confirmation matching
+
+Terms and Conditions:
+- Required checkbox validation for registration
+- Legal compliance tracking
+```
+
+**Login Form Validation:**
+```
+Email Validation:
+- Valid email format
+- Case-insensitive email lookup
+
+Password Validation:
+- No client-side password requirements for login
+- Secure password verification
+- Account lockout after failed attempts (5 attempts)
+- Progressive delay for repeated failures
+
+Brute Force Protection:
+- Rate limiting by IP address
+- CAPTCHA after multiple failures
+- Account lockout notification
+```
+
+**API Error Response Format:**
+```json
+{
+  "error": "VALIDATION_ERROR",
+  "message": "Please correct the following fields",
+  "fieldErrors": {
+    "email": ["Email is already registered"],
+    "password": ["Password must contain at least one number"],
+    "confirmPassword": ["Passwords do not match"]
+  },
+  "timestamp": "2025-05-27T10:30:00.000Z"
+}
+```
+
+### My Submissions Dashboard Requirements
+
+**Frontend My Submissions Features:**
+- User's submitted project ideas dashboard
+- Project status tracking and management
+- Edit and delete capabilities
+- Submission statistics
+
+**Backend Requirements for My Submissions:**
+```
+GET /api/users/me/submissions
+- Headers: Authorization Bearer token
+- Query Params: ?status=PUBLISHED&page=0&size=20&sortBy=newest
+- Response: Page<ProjectIdea> with additional owner metadata
+- Includes: edit permissions, status history, engagement stats
+
+GET /api/users/me/submissions/stats
+- Headers: Authorization Bearer token
+- Response: Submission statistics for dashboard
+- Format: {
+    totalSubmissions: number,
+    publishedCount: number,
+    draftCount: number,
+    underReviewCount: number,
+    rejectedCount: number,
+    totalViews: number,
+    totalLikes: number,
+    totalComments: number
+  }
+
+PUT /api/projects/{id}/status
+- Headers: Authorization Bearer token
+- Request Body: { status: "DRAFT" | "UNDER_REVIEW" }
+- Response: Updated project with new status
+- Access Control: Only project owner can change status
+
+GET /api/users/me/submissions/{id}/analytics
+- Headers: Authorization Bearer token
+- Response: Detailed analytics for user's specific project
+- Includes: view trends, engagement metrics, demographic data
+```
+
+**Dashboard Data Requirements:**
+- Filter by project status (All, Published, Draft, Under Review, Rejected)
+- Sort by submission date, last updated, views, likes
+- Search within user's own submissions
+- Batch operations (select multiple for deletion/status change)
+- Quick actions (edit, delete, resubmit)
+- Status change notifications and history
+````

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { Eye, EyeOff, ArrowLeft, Brain, Sparkles, Shield, Zap } from 'lucide-react';
 
 /**
@@ -183,6 +184,7 @@ const AuthBenefits = ({ mode }) => {
 
 const Auth = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [searchParams] = useSearchParams();
   const [mode, setMode] = useState(searchParams.get('mode') || 'login');
   const [showPassword, setShowPassword] = useState(false);
@@ -221,18 +223,60 @@ const Auth = () => {
       [name]: type === 'checkbox' ? checked : value
     }));
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     
-    // Simulate API call
-    setTimeout(() => {
-      console.log(`${mode} submitted:`, formData);
+    try {
+      // Simulate API call with delay
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      
+      // Create user data for context
+      const userData = {
+        id: Date.now(),
+        email: formData.email,
+        name: mode === 'signup' ? 
+          (formData.fullName || `${formData.firstName} ${formData.lastName}`.trim() || formData.email.split('@')[0]) : 
+          formData.email.split('@')[0],
+        joinDate: new Date().toISOString(),
+        isVerified: false,
+        preferences: {
+          emailNotifications: true,
+          ideaRecommendations: true,
+          weeklyDigest: true,
+          profileVisibility: 'public'
+        },
+        stats: {
+          ideasSubmitted: 0,
+          profileViews: 0,
+          inspirationCount: 0,
+          totalShares: 0
+        }
+      };
+
+      // Login user using context
+      login(userData);
+      
+      // Show success message
+      setToastMessage(mode === 'signup' ? 
+        '🎉 Welcome to WantAnIdea! Your account has been created successfully.' : 
+        '🎉 Welcome back! You\'ve been signed in successfully.'
+      );
+      setToastType('success');
+      setShowToast(true);
+      
+      // Redirect to account page after successful auth
+      setTimeout(() => {
+        navigate('/account');
+      }, 1000);
+      
+    } catch (error) {
+      setToastMessage('Something went wrong. Please try again.');
+      setToastType('error');
+      setShowToast(true);
+    } finally {
       setIsLoading(false);
-      // Here you would handle actual authentication
-      navigate('/'); // Redirect to home after successful auth
-    }, 1500);
+    }
   };
 
   const handleSocialAuth = (provider) => {

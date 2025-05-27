@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
+import { AuthProvider } from './contexts/AuthContext';
 import Navbar from './components/Navbar';
 import Home from './components/Home';
 import BrowseIdeas from './components/BrowseIdeas';
@@ -9,6 +10,7 @@ import MySubmissions from './components/MySubmissions';
 import About from './components/About';
 import Auth from './components/Auth';
 import ProjectDetails from './components/ProjectDetails';
+import UserAccount from './components/UserAccount';
 import Footer from './components/Footer';
 
 function App() {
@@ -56,47 +58,53 @@ function App() {
   ]);
 
   return (
-    <Router>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-        <Navbar />
-        <Routes>
-          <Route 
-            path="/" 
-            element={<Home projectIdeas={projectIdeas} />} 
-          />
-          <Route 
-            path="/project/:id" 
-            element={<ProjectDetails projectIdeas={projectIdeas} />} 
-          />
-          {/* Placeholder routes for future pages */}
-          <Route 
-            path="/browse" 
-            element={<BrowseIdeas projectIdeas={projectIdeas} />} 
-          />
-          <Route 
-            path="/submit" 
-            element={<SubmitIdea />} 
-          />
-          <Route 
-            path="/edit/:id" 
-            element={<SubmitIdea isEditMode={true} />} 
-          />
-          <Route 
-            path="/my-submissions" 
-            element={<MySubmissions />} 
-          />
-          <Route 
-            path="/about" 
-            element={<About />} 
-          />
-          <Route 
-            path="/auth" 
-            element={<Auth />} 
-          />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+          <Navbar />
+          <Routes>
+            <Route 
+              path="/" 
+              element={<Home projectIdeas={projectIdeas} />} 
+            />
+            <Route 
+              path="/project/:id" 
+              element={<ProjectDetails projectIdeas={projectIdeas} />} 
+            />
+            {/* Placeholder routes for future pages */}
+            <Route 
+              path="/browse" 
+              element={<BrowseIdeas projectIdeas={projectIdeas} />} 
+            />
+            <Route 
+              path="/submit" 
+              element={<SubmitIdea />} 
+            />
+            <Route 
+              path="/edit/:id" 
+              element={<SubmitIdea isEditMode={true} />} 
+            />
+            <Route 
+              path="/my-submissions" 
+              element={<MySubmissions />} 
+            />
+            <Route 
+              path="/about" 
+              element={<About />} 
+            />
+            <Route 
+              path="/auth" 
+              element={<Auth />} 
+            />
+            <Route 
+              path="/account" 
+              element={<UserAccount />} 
+            />
+          </Routes>
+          <Footer />
+        </div>
+      </Router>
+    </AuthProvider>
   );
 }
 

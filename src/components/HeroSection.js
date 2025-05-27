@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import ProjectCard from './ProjectCard';
 
 /**
@@ -204,9 +205,9 @@ const UserProgressShowcase = ({ userStats, onViewProgress }) => {
 
 const HeroSection = ({ projectIdeas }) => {
   const navigate = useNavigate();
+  const { user, isAuthenticated, login, logout } = useAuth();
   const [showStats, setShowStats] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [toastNotification, setToastNotification] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);  const [toastNotification, setToastNotification] = useState(null);
   const [userProgress, setUserProgress] = useState({
     level: 'Explorer',
     ideasViewed: 0,
@@ -310,14 +311,12 @@ const HeroSection = ({ projectIdeas }) => {
       </div>
       
       <section className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">        {/* Enhanced Hero Header - Unique & Creative */}
-        <div className="text-center mb-16">
-          {/* Creative Social Proof Badge */}
+        <div className="text-center mb-16">          {/* Creative Social Proof Badge */}
           <div className="inline-flex items-center bg-gradient-to-r from-yellow-100 via-orange-100 to-pink-100 text-orange-900 px-8 py-4 rounded-full border-2 border-orange-200 mb-8 shadow-xl transform hover:scale-105 transition-transform duration-300">
             <span className="text-3xl mr-3 animate-bounce">🎯</span>
             <span className="font-bold text-lg">Where 50,000+ crazy ideas become reality!</span>
             <span className="text-2xl ml-3 animate-pulse">✨</span>
-          </div>
-            {/* Main Headline - More Creative & Personality */}
+          </div>          {/* Main Headline - More Creative & Personality */}
           <h1 className="text-6xl md:text-8xl font-black text-gray-900 mb-8 leading-none">
             <span className="inline-block text-orange-500 transform -rotate-2">Got a</span>
             <span className="inline-block text-pink-600 transform rotate-1">WILD</span>
