@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { 
   User, Settings, Heart, Eye, MessageSquare, TrendingUp, 
   Edit3, Save, Camera, Mail, Globe, Github, Linkedin, 
@@ -207,6 +208,7 @@ const TabButton = ({ id, label, icon: Icon, isActive, onClick, badge }) => (
 
 const UserAccount = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isLoading, setIsLoading] = useState(false);
   const [showToast, setShowToast] = useState(false);
@@ -295,9 +297,9 @@ const UserAccount = () => {
       setIsLoading(false);
     }
   };
-
   // Handle logout
   const handleLogout = () => {
+    logout(); // Call the logout function from AuthContext
     showNotification('Logged out successfully!', 'info');
     setTimeout(() => {
       navigate('/auth');

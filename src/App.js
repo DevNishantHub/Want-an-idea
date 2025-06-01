@@ -9,6 +9,7 @@ import SubmitIdea from './components/SubmitIdea';
 import MySubmissions from './components/MySubmissions';
 import About from './components/About';
 import Auth from './components/Auth';
+import ResetPassword from './components/ResetPassword';
 import ProjectDetails from './components/ProjectDetails';
 import UserAccount from './components/UserAccount';
 import Footer from './components/Footer';
@@ -95,6 +96,10 @@ function App() {
             <Route 
               path="/auth" 
               element={<Auth />} 
+            />
+            <Route 
+              path="/auth/reset-password" 
+              element={<ResetPassword />} 
             />
             <Route 
               path="/account" 
