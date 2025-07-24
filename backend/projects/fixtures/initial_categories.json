@@ -1,0 +1,90 @@
+[
+  {
+    "model": "projects.category",
+    "pk": 1,
+    "fields": {
+      "name": "Technology",
+      "description": "Software development, mobile apps, web applications, AI/ML projects",
+      "icon": "fas fa-laptop-code",
+      "color": "#007bff",
+      "is_active": true
+    }
+  },
+  {
+    "model": "projects.category",
+    "pk": 2,
+    "fields": {
+      "name": "Health & Wellness",
+      "description": "Healthcare innovations, fitness apps, mental health solutions",
+      "icon": "fas fa-heartbeat",
+      "color": "#28a745",
+      "is_active": true
+    }
+  },
+  {
+    "model": "projects.category",
+    "pk": 3,
+    "fields": {
+      "name": "Education",
+      "description": "E-learning platforms, educational tools, skill development",
+      "icon": "fas fa-graduation-cap",
+      "color": "#ffc107",
+      "is_active": true
+    }
+  },
+  {
+    "model": "projects.category",
+    "pk": 4,
+    "fields": {
+      "name": "Environment",
+      "description": "Sustainability projects, green technology, environmental conservation",
+      "icon": "fas fa-leaf",
+      "color": "#198754",
+      "is_active": true
+    }
+  },
+  {
+    "model": "projects.category",
+    "pk": 5,
+    "fields": {
+      "name": "Community & Social",
+      "description": "Social impact projects, community building, volunteer platforms",
+      "icon": "fas fa-users",
+      "color": "#6f42c1",
+      "is_active": true
+    }
+  },
+  {
+    "model": "projects.category",
+    "pk": 6,
+    "fields": {
+      "name": "Business & Finance",
+      "description": "Fintech, e-commerce, productivity tools, business solutions",
+      "icon": "fas fa-chart-line",
+      "color": "#fd7e14",
+      "is_active": true
+    }
+  },
+  {
+    "model": "projects.category",
+    "pk": 7,
+    "fields": {
+      "name": "Creative & Arts",
+      "description": "Digital art, music platforms, creative tools, design applications",
+      "icon": "fas fa-palette",
+      "color": "#e83e8c",
+      "is_active": true
+    }
+  },
+  {
+    "model": "projects.category",
+    "pk": 8,
+    "fields": {
+      "name": "Gaming & Entertainment",
+      "description": "Game development, entertainment platforms, interactive media",
+      "icon": "fas fa-gamepad",
+      "color": "#6610f2",
+      "is_active": true
+    }
+  }
+]

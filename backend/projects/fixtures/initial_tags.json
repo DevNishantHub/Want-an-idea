@@ -1,0 +1,137 @@
+[
+  {
+    "model": "projects.tag",
+    "pk": 1,
+    "fields": {
+      "name": "React",
+      "color": "#61dafb",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 2,
+    "fields": {
+      "name": "Python",
+      "color": "#3776ab",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 3,
+    "fields": {
+      "name": "JavaScript",
+      "color": "#f7df1e",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 4,
+    "fields": {
+      "name": "Machine Learning",
+      "color": "#ff6b6b",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 5,
+    "fields": {
+      "name": "Mobile App",
+      "color": "#4ecdc4",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 6,
+    "fields": {
+      "name": "Web Development",
+      "color": "#45b7d1",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 7,
+    "fields": {
+      "name": "API",
+      "color": "#96ceb4",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 8,
+    "fields": {
+      "name": "Database",
+      "color": "#feca57",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 9,
+    "fields": {
+      "name": "AI",
+      "color": "#ff9ff3",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 10,
+    "fields": {
+      "name": "IoT",
+      "color": "#54a0ff",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 11,
+    "fields": {
+      "name": "Blockchain",
+      "color": "#5f27cd",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 12,
+    "fields": {
+      "name": "Cloud",
+      "color": "#00d2d3",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 13,
+    "fields": {
+      "name": "DevOps",
+      "color": "#ff6348",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 14,
+    "fields": {
+      "name": "Data Science",
+      "color": "#2ed573",
+      "usage_count": 0
+    }
+  },
+  {
+    "model": "projects.tag",
+    "pk": 15,
+    "fields": {
+      "name": "Cybersecurity",
+      "color": "#ff4757",
+      "usage_count": 0
+    }
+  }
+]
