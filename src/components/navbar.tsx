@@ -20,6 +20,7 @@ export default function Navbar(){
                                     width={36}
                                     height={36}
                                     className="object-contain"
+                                    
                                 />
                             </Link>
                         </div>
