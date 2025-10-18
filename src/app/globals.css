@@ -4,7 +4,13 @@
   --background: #ffffff;
   --foreground: #171717;
 }
-
+#gradient-canvas {
+  
+  --gradient-color-1: #D1D5D8; 
+  --gradient-color-2: #3498DB; 
+  --gradient-color-3: #E74C3C;  
+  --gradient-color-4: #F1C40F;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
