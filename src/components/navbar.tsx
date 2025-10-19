@@ -2,13 +2,45 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function Navbar(){
     const [menuOpen, setMenuOpen] = useState(false);
+    const navbarRef = useRef<HTMLDivElement | null>(null);
+    let lastScrollTop = 0;
+
+  useEffect(() => {
+    // Make sure window exists (Next.js SSR safety)
+    if (typeof window === "undefined") return;
+
+    const navbar = navbarRef.current;
+    if (!navbar) return; // still no element? exit early
+
+    const handleScroll = () => {
+      if (!navbarRef.current) return; // safe guard (fixes your crash)
+
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (scrollTop > lastScrollTop) {
+        // scrolling down → hide navbar
+        navbarRef.current.style.top = "-120px";
+      } else {
+        // scrolling up → show navbar
+        navbarRef.current.style.top = "0";
+      }
+
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
     return (
-        <div className="fixed top-0 left-0 right-0 z-50 w-full">
+        <div className={`fixed top-0 left-0 right-0 h-14 w-full navbar transition-all duration-300 ${
+        menuOpen ? "translate-y-[-50px]" : "translate-y-0"
+      }`} ref={navbarRef}>
             <div className="flex justify-center py-6 px-4">
                 <div className="bg-white/70 shadow px-6 rounded-4xl w-full max-w-3xl border-3 border-gray-400 ">
                     <div className="flex items-center justify-between py-4">
@@ -64,4 +96,5 @@ export default function Navbar(){
             </div>
         </div>
     );
+    
 }
