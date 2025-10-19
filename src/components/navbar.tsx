@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 export default function Navbar(){
     const [menuOpen, setMenuOpen] = useState(false);
     const navbarRef = useRef<HTMLDivElement | null>(null);
-    let lastScrollTop = 0;
+    const lastScrollTop = useRef(0);
 
   useEffect(() => {
     // Make sure window exists (Next.js SSR safety)
@@ -21,7 +21,7 @@ export default function Navbar(){
 
       const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
 
-      if (scrollTop > lastScrollTop) {
+      if (scrollTop > lastScrollTop.current) {
         // scrolling down → hide navbar
         navbarRef.current.style.top = "-120px";
       } else {
@@ -29,7 +29,7 @@ export default function Navbar(){
         navbarRef.current.style.top = "0";
       }
 
-      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+      lastScrollTop.current = scrollTop <= 0 ? 0 : scrollTop;
     };
 
     window.addEventListener("scroll", handleScroll);
