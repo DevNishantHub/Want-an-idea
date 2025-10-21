@@ -1,4 +1,5 @@
-export default function Hero(){
+export default function Hero()
+{
     return(
         <section className=" lg:grid w-full  pt-0 lg:place-content-center mt-20">
   <div className="flex flex-col items-center justify-center mx-auto w-screen max-w-screen-xl px-4 py-16 sm:px-6 sm:py-24 lg:px-8 lg:py-32">
