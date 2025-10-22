@@ -65,8 +65,8 @@ export default function Navbar(){
                         </div>
 
                         <div className="hidden sm:flex sm:items-center gap-4">
-                            <a href="/login" className="text-gray-800 text-sm font-semibold hover:text-[#f2b229]">Sign in</a>
-                            <a href="/login" className="text-gray-800 text-sm font-semibold border border-gray-800 px-4 py-2 rounded-lg hover:text-[#f2b229] hover:border-[#f2b229]">Sign up</a>
+                            <Link href="/pages/login" className="text-gray-800 text-sm font-semibold hover:text-[#f2b229]">Sign in</Link>
+                            <a href="/pages/signup" className="text-gray-800 text-sm font-semibold border border-gray-800 px-4 py-2 rounded-lg hover:text-[#f2b229] hover:border-[#f2b229]">Sign up</a>
                         </div>
 
                         <button 
@@ -86,8 +86,8 @@ export default function Navbar(){
                                 <a href="#" className="text-gray-800 text-sm font-semibold hover:text-[#f2b229]">Your Ideas</a>
                                 <a href="#" className="text-gray-800 text-sm font-semibold hover:text-[#f2b229]">About</a>
                                 <div className="flex justify-between items-center border-t pt-3 mt-2">
-                                    <a href="/login" className="text-gray-800 text-sm font-semibold hover:text-[#f2b229]">Sign in</a>
-                                    <a href="/login" className="text-gray-800 text-sm font-semibold border border-gray-800 px-4 py-1 rounded-lg hover:text-[#f2b229] hover:border-[#f2b229]">Sign up</a>
+                                    <a href="/pages/login" className="text-gray-800 text-sm font-semibold hover:text-[#f2b229]">Sign in</a>
+                                    <a href="/pages/signup" className="text-gray-800 text-sm font-semibold border border-gray-800 px-4 py-1 rounded-lg hover:text-[#f2b229] hover:border-[#f2b229]">Sign up</a>
                                 </div>
                             </div>
                         </div>
